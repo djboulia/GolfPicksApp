@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View, TextInput, Text } from "react-native";
 
-export default function LabeTextInput({
+export default function LabelTextInput({
   label,
   value,
   placeholder,
@@ -17,7 +17,7 @@ export default function LabeTextInput({
   const [focus, setFocus] = React.useState(false);
 
   return (
-    <>
+    <View>
       <View style={styles.inputContainer}>
         <Text>{label}</Text>
       </View>
@@ -32,7 +32,7 @@ export default function LabeTextInput({
           secureTextEntry={password}
         />
       </View>
-    </>
+    </View>
   );
 }
 
