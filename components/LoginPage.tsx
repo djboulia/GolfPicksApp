@@ -11,11 +11,20 @@ import {
 import LabelTextInput from "./LabelTextInput";
 import Button from "./Button";
 
+import { login } from "../lib/Gamer";
+
 const GolfPicksLogo = require("../assets/images/golfpicks.png");
 
 export default function LoginPage() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  const onLogin = () => {
+    console.log(`calling Login with ${email} and ${password}`);
+    login(email, password).then((response) => {
+      console.log(response);
+    });
+  };
 
   return (
     <KeyboardAvoidingView
@@ -46,7 +55,7 @@ export default function LoginPage() {
         />
       </View>
       <View style={styles.containerInput}>
-        <Button label="Log in" onPress={() => console.log("Login")} />
+        <Button label="Log in" onPress={onLogin} />
       </View>
       <StatusBar style="auto" />
     </KeyboardAvoidingView>
