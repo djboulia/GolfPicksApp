@@ -1,17 +1,23 @@
 import React from "react";
 import { StyleSheet, View, TextInput, Text } from "react-native";
 
+export enum InputTypes {
+  text = "text",
+  email = "email",
+  password = "password",
+}
+
 export default function LabelTextInput({
   label,
   value,
   placeholder,
-  password = false,
+  type = InputTypes.text,
   onChange,
 }: {
   label: string;
   value: string;
   placeholder: string;
-  password?: boolean;
+  type?: InputTypes;
   onChange: (text: string) => void;
 }) {
   const [focus, setFocus] = React.useState(false);
@@ -28,8 +34,9 @@ export default function LabelTextInput({
           onBlur={() => setFocus(false)}
           onChangeText={onChange}
           value={value}
+          inputMode={type === "email" ? "email" : "text"}
           placeholder={placeholder}
-          secureTextEntry={password}
+          secureTextEntry={type === "password" ? true : false}
         />
       </View>
     </View>

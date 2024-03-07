@@ -13,6 +13,9 @@ export async function login(username: string, password: string) {
   });
 
   const json = await response.json();
+  if (response.status !== 200) {
+    throw new Error(json.message);
+  }
 
   return json;
 }

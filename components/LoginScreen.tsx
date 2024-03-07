@@ -8,22 +8,31 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import LabelTextInput from "./LabelTextInput";
+import LabelTextInput, { InputTypes } from "./LabelTextInput";
 import Button from "./Button";
+import ErrorText from "./ErrorText";
 
 import { login } from "../lib/Gamer";
 
 const GolfPicksLogo = require("../assets/images/golfpicks.png");
 
-export default function LoginPage() {
+export default function LoginScreen({ navigation }: { navigation: any }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [errorMsg, setErrorMsg] = React.useState<string | undefined>(undefined);
 
   const onLogin = () => {
     console.log(`calling Login with ${email} and ${password}`);
-    login(email, password).then((response) => {
-      console.log(response);
-    });
+    login(email, password)
+      .then((response): any => {
+        console.log("login returned: ", response);
+        setErrorMsg(undefined);
+        navigation.navigate("Home", { user: response });
+      })
+      .catch((error): any => {
+        console.log("login error: ", error);
+        setErrorMsg("Error logging in.");
+      });
   };
 
   return (
@@ -41,6 +50,7 @@ export default function LoginPage() {
         <LabelTextInput
           label="Email:"
           value={email}
+          type={InputTypes.email}
           placeholder="Email"
           onChange={setEmail}
         />
@@ -49,14 +59,19 @@ export default function LoginPage() {
         <LabelTextInput
           label="Password:"
           value={password}
+          type={InputTypes.password}
           placeholder="Password"
           onChange={setPassword}
-          password={true}
         />
       </View>
       <View style={styles.containerInput}>
         <Button label="Log in" onPress={onLogin} />
       </View>
+      {errorMsg && (
+        <View style={styles.containerInput}>
+          <ErrorText text={errorMsg || ""} />
+        </View>
+      )}
       <StatusBar style="auto" />
     </KeyboardAvoidingView>
   );
