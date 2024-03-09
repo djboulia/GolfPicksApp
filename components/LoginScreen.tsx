@@ -1,43 +1,45 @@
-import React from "react";
-import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
-import LabelTextInput, { InputTypes } from "./LabelTextInput";
-import Button from "./Button";
-import ErrorText from "./ErrorText";
+import React from 'react';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, Image, KeyboardAvoidingView, Platform } from 'react-native';
+import LabelTextInput, { InputTypes } from './LabelTextInput';
+import Button from './Button';
+import ErrorText from './ErrorText';
 
-import { login } from "../lib/Gamer";
+import { Gamer } from '../lib/api/Gamer';
+import { useCurrentGamer } from '../lib/hooks/useCurrentGamer';
+import { AuthContext } from '../lib/AuthContext';
 
-const GolfPicksLogo = require("../assets/images/golfpicks.png");
+const GolfPicksLogo = require('../assets/images/golfpicks.png');
 
 export default function LoginScreen({ navigation }: { navigation: any }) {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [errorMsg, setErrorMsg] = React.useState<string | undefined>(undefined);
+  const gamer = useCurrentGamer();
+
+  const { signIn } = React.useContext(AuthContext);
 
   const onLogin = () => {
     console.log(`calling Login with ${email} and ${password}`);
-    login(email, password)
-      .then((response): any => {
-        console.log("login returned: ", response);
-        setErrorMsg(undefined);
-        navigation.navigate("Home", { user: response });
+    Gamer.login(email, password)
+      .then((gamer): any => {
+        if (gamer) {
+          console.log('login: ', gamer);
+          setErrorMsg(undefined);
+          signIn();
+        } else {
+          setErrorMsg('Error logging in.');
+        }
       })
       .catch((error): any => {
-        console.log("login error: ", error);
-        setErrorMsg("Error logging in.");
+        console.log('login error: ', error);
+        setErrorMsg('Error logging in.');
       });
   };
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
       <View style={styles.imageContainer}>
@@ -69,7 +71,7 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
       </View>
       {errorMsg && (
         <View style={styles.containerInput}>
-          <ErrorText text={errorMsg || ""} />
+          <ErrorText text={errorMsg || ''} />
         </View>
       )}
       <StatusBar style="auto" />
@@ -80,9 +82,9 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   image: {
     width: 200,
@@ -93,17 +95,17 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 25,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   containerInput: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     padding: 10,
   },
   input: {
     width: 300,
     height: 40,
     padding: 8,
-    borderColor: "gray",
+    borderColor: 'gray',
     borderWidth: 1,
   },
 });
