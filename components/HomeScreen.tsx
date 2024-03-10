@@ -1,16 +1,13 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import Button from './Button';
+import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
 import ErrorText from './ErrorText';
 import { useCurrentGamer } from '../lib/hooks/useCurrentGamer';
-import { AuthContext } from '../lib/AuthContext';
+import TournamentItem from './TournamentItem';
 
 export default function HomeScreen({ navigation }: { navigation: any }) {
-  const [errorMsg, setErrorMsg] = React.useState<string | undefined>(undefined);
+  const [errorMsg] = React.useState<string | undefined>(undefined);
   const gamer = useCurrentGamer();
-  const [games, setGames] = React.useState([]);
-
-  const { signOut } = React.useContext(AuthContext);
+  const [games, setGames] = React.useState<any>();
 
   useEffect(() => {
     const getGamesAsync = async () => {
@@ -24,32 +21,20 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
     }
   }, [gamer]);
 
-  async function logout() {
-    console.log('logging out');
-    try {
-      await gamer?.logout();
-      signOut();
-    } catch (error) {
-      console.log('logout error: ', error);
-      setErrorMsg('Error logging out.');
-    }
-  }
-
   return (
     <View style={styles.container}>
       <View style={styles.containerInput}>
         <Text style={styles.title}>Logged in user {gamer?.getName()}</Text>
 
-        {games.map((game: any, index: number) => {
-          return <Text key={index}> {JSON.stringify(game)} </Text>;
-        })}
-
-        <Button
-          label="Logout"
-          onPress={() => {
-            logout();
-          }}
-        />
+        {games ? (
+          <FlatList
+            data={games.history}
+            renderItem={({ item }) => <TournamentItem event={item.event} />}
+            keyExtractor={(item) => item.eventid}
+          />
+        ) : (
+          <Text>Loading...</Text>
+        )}
       </View>
       {errorMsg && (
         <View style={styles.containerInput}>
@@ -65,7 +50,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   image: {
     width: 200,

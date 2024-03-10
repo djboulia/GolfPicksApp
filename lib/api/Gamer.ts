@@ -25,24 +25,25 @@ export class Gamer {
   }
 
   static async login(username: string, password: string) {
-    const url = getUrl();
-    const loginUrl = url + '/login';
+    const baseUrl = getUrl();
+    const url = baseUrl + '/login';
 
-    const response = await fetch(loginUrl, {
+    const response = await fetch(url, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ username: username, password: password }),
     }).catch((error) => {
-      console.log('login error for URL: ', loginUrl);
+      console.log('login error for URL: ', url);
       throw error;
     });
 
     const json = await response.json();
     if (response.status !== 200) {
-      console.log('login error for URL: ', loginUrl);
+      console.log('login error for URL: ', url);
       throw new Error(json.message);
     }
 
@@ -76,6 +77,7 @@ export class Gamer {
 
     const response = await fetch(url, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -91,6 +93,7 @@ export class Gamer {
       throw new Error(json.message);
     }
 
+    // console.log('games: ', JSON.stringify(json));
     return json;
   }
 }

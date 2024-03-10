@@ -4,7 +4,7 @@ export class Storage {
   static async getItem(key: string) {
     try {
       const value = await AsyncStorage.getItem(key);
-      console.log(value);
+      console.log('getItem:', value);
       return value;
     } catch (error) {
       return undefined;
@@ -14,6 +14,7 @@ export class Storage {
   static async setItem(key: string, value: string) {
     try {
       await AsyncStorage.setItem(key, value);
+      console.log('setItem: ', key, value);
       return value;
     } catch (error) {
       return undefined;
@@ -23,6 +24,7 @@ export class Storage {
   static async removeItem(key: string) {
     try {
       await AsyncStorage.removeItem(key);
+      console.log('removeItem: ', key);
       return;
     } catch (error) {
       return undefined;
