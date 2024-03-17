@@ -21,6 +21,57 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
     }
   }, [gamer]);
 
+  const testData = [
+    {
+      event: 'event 1',
+      eventid: '1',
+    },
+    {
+      event: 'event 2',
+      eventid: '2',
+    },
+    {
+      event: 'event 3',
+      eventid: '3',
+    },
+    {
+      event: 'event 4',
+      eventid: '4',
+    },
+    {
+      event: 'event 5',
+      eventid: '5',
+    },
+    {
+      event: 'event 6',
+      eventid: '6',
+    },
+    {
+      event: 'event 7',
+      eventid: '7',
+    },
+    {
+      event: 'event 8',
+      eventid: '8',
+    },
+    {
+      event: 'event 9',
+      eventid: '9',
+    },
+    {
+      event: 'event 10',
+      eventid: '10',
+    },
+    {
+      event: 'event 11',
+      eventid: '11',
+    },
+    {
+      event: 'event 12',
+      eventid: '12',
+    },
+  ];
+
   return (
     <View style={styles.container}>
       <View style={styles.containerInput}>
@@ -30,7 +81,10 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
           <FlatList
             data={games.history}
             renderItem={({ item }) => <TournamentItem event={item.event} />}
-            keyExtractor={(item) => item.eventid}
+            keyExtractor={(item) => {
+              console.log(item);
+              return item.eventid;
+            }}
           />
         ) : (
           <Text>Loading...</Text>
