@@ -9,8 +9,6 @@ export default function TournamentItem({
   event: string;
   onClick?: () => void;
 }) {
-  const [focus, setFocus] = React.useState(false);
-
   return (
     <View style={styles.container}>
       <View style={styles.linkContainer}>
@@ -27,14 +25,16 @@ export default function TournamentItem({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 5,
+    // marginVertical: 5,
     width: '100%',
     borderTopWidth: 1,
     borderTopColor: '#005500',
-    flexDirection: 'row',
-    padding: 2,
+    padding: 12,
   },
   linkContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
     padding: 4,
   },
 });
