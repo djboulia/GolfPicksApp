@@ -15,14 +15,22 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [errorMsg, setErrorMsg] = React.useState<string | undefined>(undefined);
+  const [inProgress, setInProgress] = React.useState(false);
   const gamer = useCurrentGamer();
 
   const { signIn } = React.useContext(AuthContext);
 
   const onLogin = () => {
+    if (inProgress) {
+      console.log('login in already progress');
+      return;
+    }
     console.log(`calling Login with ${email} and ${password}`);
+    setInProgress(true);
     Gamer.login(email, password)
       .then((gamer): any => {
+        setInProgress(false);
+
         if (gamer) {
           console.log('login: ', gamer);
           setErrorMsg(undefined);
@@ -32,6 +40,8 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
         }
       })
       .catch((error): any => {
+        setInProgress(false);
+
         console.log('login error: ', error);
         setErrorMsg('Error logging in.');
       });
