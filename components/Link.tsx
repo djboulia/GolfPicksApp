@@ -11,18 +11,8 @@ export default function Link({ label, onPress }: { label: string; onPress: () =>
 }
 
 const styles = StyleSheet.create({
-  linkContainer: {
-    marginHorizontal: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  link: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
+  linkContainer: {},
+  link: {},
   linkLabel: {
     color: '#005500',
   },
