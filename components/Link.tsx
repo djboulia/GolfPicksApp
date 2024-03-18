@@ -1,10 +1,20 @@
 import { StyleSheet, View, Pressable, Text } from 'react-native';
 
-export default function Link({ label, onPress }: { label: string; onPress: () => void }) {
+export default function Link({
+  label,
+  style,
+  onPress,
+}: {
+  label: string;
+  style?: any;
+  onPress: () => void;
+}) {
+  const textStyle = style ? style : styles.linkLabel;
+
   return (
     <View style={styles.linkContainer}>
       <Pressable style={styles.link} onPress={onPress}>
-        <Text style={styles.linkLabel}>{label}</Text>
+        <Text style={textStyle}>{label}</Text>
       </Pressable>
     </View>
   );
@@ -13,7 +23,5 @@ export default function Link({ label, onPress }: { label: string; onPress: () =>
 const styles = StyleSheet.create({
   linkContainer: {},
   link: {},
-  linkLabel: {
-    color: '#005500',
-  },
+  linkLabel: {},
 });

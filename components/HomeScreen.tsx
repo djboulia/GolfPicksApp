@@ -75,7 +75,7 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
   return (
     <View style={styles.container}>
       <View style={styles.containerInput}>
-        <Text style={styles.title}>Logged in user {gamer?.getName()}</Text>
+        <Text style={styles.title}>Games for {gamer?.getName()}</Text>
 
         {games ? (
           <FlatList
@@ -101,9 +101,7 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
   },
   image: {
     width: 200,
@@ -113,12 +111,15 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   title: {
+    backgroundColor: '#005500',
+    color: '#fff',
     fontSize: 25,
     fontWeight: 'bold',
+    padding: 10,
   },
   containerInput: {
     backgroundColor: '#fff',
-    padding: 10,
+    paddingVertical: 10,
   },
   input: {
     width: 300,

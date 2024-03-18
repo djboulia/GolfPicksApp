@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import Link from './Link';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function TournamentItem({
   event,
@@ -14,10 +15,13 @@ export default function TournamentItem({
       <View style={styles.linkContainer}>
         <Link
           label={event}
+          style={styles.linkLabel}
           onPress={() => {
             console.log('link pressed');
           }}
         />
+
+        <Ionicons name="chevron-forward" size={30} color="#005500" />
       </View>
     </View>
   );
@@ -25,16 +29,20 @@ export default function TournamentItem({
 
 const styles = StyleSheet.create({
   container: {
-    // marginVertical: 5,
     width: '100%',
     borderTopWidth: 1,
-    borderTopColor: '#005500',
-    padding: 12,
+    borderTopColor: '#BBBBBB',
+    paddingVertical: 12,
   },
   linkContainer: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    padding: 4,
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  linkLabel: {
+    color: '#005500',
+    fontSize: 20,
   },
 });
