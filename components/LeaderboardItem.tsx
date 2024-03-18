@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import Link from './Link';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-export default function TournamentItem({
+export default function LeaderboardItem({
   item,
   onClick,
 }: {
@@ -16,17 +16,17 @@ export default function TournamentItem({
     <View style={styles.container}>
       <View style={styles.linkContainer}>
         <Link
-          label={item?.event}
+          label={item?.name}
           style={styles.linkLabel}
           onPress={() => {
             console.log(`link ${item.eventid} pressed`);
             if (onClick) {
-              onClick(item.eventid);
+              onClick(item.objectId);
             }
           }}
         />
 
-        <Ionicons name="chevron-forward" size={30} color="#005500" />
+        <Ionicons name="chevron-down" size={30} color="#fff" />
       </View>
     </View>
   );
@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#BBBBBB',
     paddingVertical: 12,
+    backgroundColor: '#005500',
   },
   linkContainer: {
     flex: 1,
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   linkLabel: {
-    color: '#005500',
     fontSize: 20,
+    color: '#fff',
   },
 });

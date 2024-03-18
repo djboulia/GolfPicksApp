@@ -9,6 +9,7 @@ import AboutScreen from './components/AboutScreen';
 import ProfileScreen from './components/ProfileScreen';
 import { useCurrentGamer } from './lib/hooks/useCurrentGamer';
 import { AuthContext } from './lib/AuthContext';
+import GameScreen from './components/GameScreen';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -42,10 +43,40 @@ export default function App() {
     }
   }, [gamer]);
 
+  function Games() {
+    return (
+      <Stack.Navigator>
+        <Drawer.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Drawer.Screen
+          name="Game"
+          options={{
+            drawerLabel: 'Games',
+            title: 'Games',
+          }}
+          component={GameScreen}
+        />
+        <Drawer.Screen name="Player" component={ProfileScreen} />
+      </Stack.Navigator>
+    );
+  }
+
   function Root() {
     return (
       <Drawer.Navigator>
-        <Drawer.Screen name="Home" component={HomeScreen} />
+        <Drawer.Screen
+          name="Home"
+          component={Games}
+          options={{
+            drawerLabel: 'My Games',
+            title: 'My Games',
+          }}
+        />
         <Drawer.Screen name="About" component={AboutScreen} />
         <Drawer.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Logout" component={LogoutScreen} />

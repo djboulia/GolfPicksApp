@@ -1,10 +1,9 @@
 import { Platform } from 'react-native';
 import { Storage } from '../Storage';
+import { getBaseUrl } from '../util/url';
 
-// need to use our IP address in order for Android simulator to work
-const host = Platform.OS === 'android' ? '192.168.86.244' : 'localhost';
 const getUrl = () => {
-  return `http://${host}:3000/api/Gamers`;
+  return getBaseUrl() + `/Gamers`;
 };
 
 const GAMER_KEY = 'gamer';
@@ -39,7 +38,7 @@ export class Gamer {
     }).catch((error) => {
       console.log('login error for URL: ', url);
       if (Platform.OS === 'android') {
-        console.log(`is your local ip address: ${host}?`);
+        console.log(`is your local ip address: ${getBaseUrl()}?`);
       }
       throw error;
     });

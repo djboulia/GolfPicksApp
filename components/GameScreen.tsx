@@ -1,47 +1,40 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
 import ErrorText from './ErrorText';
-import { useCurrentGamer } from '../lib/hooks/useCurrentGamer';
-import TournamentItem from './TournamentItem';
+import LeaderboardItem from './LeaderboardItem';
+import { Games } from '../lib/api/Games';
 import Loader from './Loader';
 
-export default function HomeScreen({ navigation }: { navigation: any }) {
+export default function GameScreen({ route, navigation }: { route: any; navigation: any }) {
+  const { id } = route.params;
   const [errorMsg] = React.useState<string | undefined>(undefined);
-  const gamer = useCurrentGamer();
-  const [games, setGames] = React.useState<any>();
+  const [leaderboard, setLeaderboard] = React.useState<any>();
 
   useEffect(() => {
-    const getGamesAsync = async () => {
-      console.log('getting games for gamer ', gamer?.getName());
-      const games = await gamer?.games();
-      setGames(games || []);
+    const getGameAsync = async (id: string) => {
+      const leaderboard = await Games.leaderboard(id);
+      setLeaderboard(leaderboard || []);
     };
 
-    if (gamer) {
-      getGamesAsync();
-    }
-  }, [gamer]);
-
-  const onClick = (id: string) => {
-    navigation.navigate('Game', {
-      id: id,
-    });
-  };
+    console.log('getting game ', id);
+    getGameAsync(id);
+  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.containerInput}>
-        <Text style={styles.title}>Games for {gamer?.getName()}</Text>
-
-        {games ? (
-          <FlatList
-            data={games.history}
-            renderItem={({ item }) => <TournamentItem item={item} onClick={onClick} />}
-            keyExtractor={(item) => {
-              console.log(item);
-              return item.eventid;
-            }}
-          />
+        {leaderboard ? (
+          <>
+            <Text style={styles.title}>{leaderboard?.name}</Text>
+            <FlatList
+              data={leaderboard.gamers}
+              renderItem={({ item }) => <LeaderboardItem item={item} />}
+              keyExtractor={(item) => {
+                console.log(item);
+                return item.objectId;
+              }}
+            />
+          </>
         ) : (
           <Loader />
         )}
@@ -67,8 +60,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   title: {
-    backgroundColor: '#005500',
-    color: '#fff',
+    backgroundColor: '#fff',
+    color: '#005500',
     fontSize: 25,
     fontWeight: 'bold',
     padding: 10,
