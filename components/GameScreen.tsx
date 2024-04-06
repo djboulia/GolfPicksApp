@@ -16,24 +16,48 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
       setLeaderboard(leaderboard || []);
     };
 
-    console.log('getting game ', id);
+    // console.log('getting game ', id);
     getGameAsync(id);
   }, []);
+
+  const currentRound = leaderboard?.roundInfo?.currentRound;
+
+  const gamers = leaderboard?.gamers;
+  gamers?.sort((a: any, b: any) => {
+    const roundA = a.rounds[currentRound - 1];
+    const roundB = b.rounds[currentRound - 1];
+    return roundA.score - roundB.score;
+  });
+
+  const onClick = (id: string) => {
+    console.log('clicked on ', id);
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.containerInput}>
         {leaderboard ? (
           <>
-            <Text style={styles.title}>{leaderboard?.name}</Text>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>{leaderboard?.name}</Text>
+            </View>
+            <View style={styles.leaderboardContainer}>
+              <Text style={styles.leaderboardTitle}>Game Leaderboard</Text>
+              <Text style={styles.leaderboardTitle}>Round {currentRound}</Text>
+            </View>
             <FlatList
-              data={leaderboard.gamers}
-              renderItem={({ item }) => <LeaderboardItem item={item} />}
+              data={gamers}
+              renderItem={({ item }) => (
+                <LeaderboardItem item={item} currentRound={currentRound} onClick={onClick} />
+              )}
               keyExtractor={(item) => {
-                console.log(item);
+                // console.log(item);
                 return item.objectId;
               }}
             />
+            <View style={styles.leaderboardContainer}>
+              <Text style={styles.leaderboardRoundLeader}>Round Leader</Text>
+            </View>
           </>
         ) : (
           <Loader />
@@ -59,12 +83,18 @@ const styles = StyleSheet.create({
   imageContainer: {
     padding: 10,
   },
+  titleContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
   title: {
     backgroundColor: '#fff',
-    color: '#005500',
+    color: '#000000',
     fontSize: 25,
     fontWeight: 'bold',
-    padding: 10,
+    padding: 20,
+    textAlign: 'center',
   },
   containerInput: {
     backgroundColor: '#fff',
@@ -76,5 +106,23 @@ const styles = StyleSheet.create({
     padding: 8,
     borderColor: 'gray',
     borderWidth: 1,
+  },
+  leaderboardContainer: {
+    backgroundColor: '#005500',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    padding: 20,
+  },
+  leaderboardTitle: {
+    color: '#fff',
+    fontSize: 25,
+    fontWeight: 'bold',
+    padding: 10,
+  },
+  leaderboardRoundLeader: {
+    color: '#ff0',
+    fontSize: 20,
+    padding: 10,
   },
 });

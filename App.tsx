@@ -47,7 +47,7 @@ export default function App() {
     return (
       <Stack.Navigator>
         <Drawer.Screen
-          name="Home"
+          name="Games"
           component={HomeScreen}
           options={{
             headerShown: false,

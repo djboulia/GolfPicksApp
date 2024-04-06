@@ -38,7 +38,7 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
             data={games.history}
             renderItem={({ item }) => <TournamentItem item={item} onClick={onClick} />}
             keyExtractor={(item) => {
-              console.log(item);
+              // console.log(item);
               return item.eventid;
             }}
           />

@@ -1,32 +1,40 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import Link from './Link';
+import LinkContainer from './LinkContainer';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function LeaderboardItem({
   item,
+  currentRound,
   onClick,
 }: {
   item: any;
+  currentRound: number;
   onClick?: (id: string) => void;
 }) {
-  // console.log('item: ', item);
+  console.log('item: ', item);
+  console.log('currentRound: ', item?.rounds, currentRound);
+
+  const round = item?.rounds[currentRound - 1] || {};
 
   return (
     <View style={styles.container}>
-      <View style={styles.linkContainer}>
-        <Link
-          label={item?.name}
-          style={styles.linkLabel}
+      <View>
+        <LinkContainer
+          style={styles.linkContainer}
           onPress={() => {
             console.log(`link ${item.eventid} pressed`);
             if (onClick) {
               onClick(item.objectId);
             }
           }}
-        />
-
-        <Ionicons name="chevron-down" size={30} color="#fff" />
+        >
+          <Text style={round.leader ? styles.linkLeaderLabel : styles.linkLabel}>{item?.name}</Text>
+          <Text style={round.leader ? styles.linkLeaderScore : styles.linkScore}>
+            {round.score}
+          </Text>
+          <Ionicons name="chevron-forward" size={30} color="#fff" />
+        </LinkContainer>
       </View>
     </View>
   );
@@ -48,7 +56,23 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   linkLabel: {
+    width: 250,
     fontSize: 20,
     color: '#fff',
+  },
+  linkLeaderLabel: {
+    width: 250,
+    fontSize: 20,
+    color: '#ff0',
+  },
+  linkScore: {
+    width: 50,
+    fontSize: 20,
+    color: '#fff',
+  },
+  linkLeaderScore: {
+    width: 50,
+    fontSize: 20,
+    color: '#ff0',
   },
 });
