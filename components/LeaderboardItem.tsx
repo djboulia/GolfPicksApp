@@ -10,12 +10,10 @@ export default function LeaderboardItem({
 }: {
   item: any;
   currentRound: number;
-  onClick?: (id: string) => void;
+  onClick?: (item: any) => void;
 }) {
   console.log('item: ', item);
   console.log('currentRound: ', item?.rounds, currentRound);
-
-  const round = item?.rounds[currentRound - 1] || {};
 
   return (
     <View style={styles.container}>
@@ -25,20 +23,40 @@ export default function LeaderboardItem({
           onPress={() => {
             console.log(`link ${item.eventid} pressed`);
             if (onClick) {
-              onClick(item.objectId);
+              onClick(item);
             }
           }}
         >
-          <Text style={round.leader ? styles.linkLeaderLabel : styles.linkLabel}>{item?.name}</Text>
-          <Text style={round.leader ? styles.linkLeaderScore : styles.linkScore}>
-            {round.score}
+          <Text style={styles.linkLabel} numberOfLines={1}>
+            {item?.name}
           </Text>
+
+          {item?.rounds.map((round: any) => {
+            return (
+              <Text style={round.leader ? styles.linkLeaderScore : styles.linkScore}>
+                {round.score}
+              </Text>
+            );
+          })}
+
           <Ionicons name="chevron-forward" size={30} color="#fff" />
         </LinkContainer>
       </View>
     </View>
   );
 }
+
+const defaultFontSize = 18;
+const defaultColor = '#fff';
+const leaderColor = '#ff0';
+
+const linkLabelBase = {
+  fontSize: defaultFontSize,
+};
+
+const linkScoreBase = {
+  fontSize: defaultFontSize,
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -53,26 +71,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 5,
   },
   linkLabel: {
-    width: 250,
-    fontSize: 20,
-    color: '#fff',
+    ...linkLabelBase,
+    flex: 3,
+    paddingRight: 10,
+    color: defaultColor,
   },
   linkLeaderLabel: {
-    width: 250,
-    fontSize: 20,
-    color: '#ff0',
+    ...linkLabelBase,
+    flex: 3,
+    color: leaderColor,
   },
   linkScore: {
-    width: 50,
-    fontSize: 20,
-    color: '#fff',
+    ...linkScoreBase,
+    flex: 1,
+    color: defaultColor,
   },
   linkLeaderScore: {
-    width: 50,
-    fontSize: 20,
-    color: '#ff0',
+    ...linkScoreBase,
+    flex: 1,
+    color: leaderColor,
   },
 });
