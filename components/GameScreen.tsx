@@ -29,8 +29,11 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
     return roundA.score - roundB.score;
   });
 
-  const onClick = (id: string) => {
-    console.log('clicked on ', id);
+  const onClick = (gamer: any) => {
+    console.log('clicked on ', gamer);
+    navigation.navigate('GameDetails', {
+      gamer: gamer,
+    });
   };
 
   return (
@@ -76,13 +79,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
   },
-  image: {
-    width: 200,
-    height: 200,
-  },
-  imageContainer: {
-    padding: 10,
-  },
   titleContainer: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -99,13 +95,6 @@ const styles = StyleSheet.create({
   containerInput: {
     backgroundColor: '#fff',
     paddingVertical: 10,
-  },
-  input: {
-    width: 300,
-    height: 40,
-    padding: 8,
-    borderColor: 'gray',
-    borderWidth: 1,
   },
   leaderboardContainer: {
     backgroundColor: '#005500',

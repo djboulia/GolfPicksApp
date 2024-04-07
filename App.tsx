@@ -10,6 +10,7 @@ import ProfileScreen from './components/ProfileScreen';
 import { useCurrentGamer } from './lib/hooks/useCurrentGamer';
 import { AuthContext } from './lib/AuthContext';
 import GameScreen from './components/GameScreen';
+import GameDetails from './components/GameDetails';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -56,10 +57,18 @@ export default function App() {
         <Drawer.Screen
           name="Game"
           options={{
-            drawerLabel: 'Games',
-            title: 'Games',
+            drawerLabel: 'Leaderboard',
+            title: 'Leaderboard',
           }}
           component={GameScreen}
+        />
+        <Drawer.Screen
+          name="GameDetails"
+          options={{
+            drawerLabel: 'Details',
+            title: 'Details',
+          }}
+          component={GameDetails}
         />
         <Drawer.Screen name="Player" component={ProfileScreen} />
       </Stack.Navigator>
