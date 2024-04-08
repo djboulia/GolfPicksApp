@@ -1,18 +1,22 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
 import ErrorText from './ErrorText';
 import LeaderboardItem from './LeaderboardItem';
 import { Games } from '../lib/api/Games';
 import Loader from './Loader';
+import { AuthContext } from '../lib/AuthContext';
 
 export default function GameScreen({ route, navigation }: { route: any; navigation: any }) {
   const { id } = route.params;
-  const [errorMsg] = React.useState<string | undefined>(undefined);
+  const [errorMsg, setErrorMessage] = React.useState<string | undefined>(undefined);
   const [leaderboard, setLeaderboard] = React.useState<any>();
 
   useEffect(() => {
     const getGameAsync = async (id: string) => {
-      const leaderboard = await Games.leaderboard(id);
+      const leaderboard = await Games.leaderboard(id).catch((error) => {
+        console.log('error getting game: ', error);
+        setErrorMessage(error.message);
+      });
       setLeaderboard(leaderboard || []);
     };
 
@@ -20,6 +24,11 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
     getGameAsync(id);
   }, []);
 
+  // if we couldn't get the game info, make the user sign in again
+  if (errorMsg) {
+    const context = useContext(AuthContext);
+    context.signOut();
+  }
   const currentRound = leaderboard?.roundInfo?.currentRound;
 
   const gamers = leaderboard?.gamers;
@@ -77,7 +86,7 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
             />
           </>
         ) : (
-          <Loader />
+          !errorMsg && <Loader />
         )}
       </View>
       {errorMsg && (

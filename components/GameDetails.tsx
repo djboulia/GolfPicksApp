@@ -6,18 +6,26 @@ export default function GameDetails({ route, navigation }: { route: any; navigat
   const { gamer } = route.params;
   const [errorMsg] = React.useState<string | undefined>(undefined);
 
+  const rounds = [1, 2, 3, 4];
+
   const header = () => {
     return (
       <>
-        <View style={styles.titleContainer}>
+        <View key={'title'} style={styles.titleContainer}>
           <Text style={styles.title}>Picks for {gamer?.name}</Text>
         </View>
-        <View style={styles.totalsContainer}>
-          <Text style={styles.header}> </Text>
-          <Text style={styles.headerScore}>1</Text>
-          <Text style={styles.headerScore}>2</Text>
-          <Text style={styles.headerScore}>3</Text>
-          <Text style={styles.headerScore}>4</Text>
+        <View key={'header'} style={styles.totalsContainer}>
+          <Text key={'header'} style={styles.header}>
+            {' '}
+          </Text>
+
+          {rounds.map((round: any) => {
+            return (
+              <Text key={round} style={styles.headerScore}>
+                {round}
+              </Text>
+            );
+          })}
         </View>
       </>
     );
@@ -26,19 +34,29 @@ export default function GameDetails({ route, navigation }: { route: any; navigat
   const footer = () => {
     return (
       <>
-        <View style={styles.totalsContainer}>
-          <Text style={styles.totals}>Total</Text>
-          <Text style={styles.totalsScore}>{gamer.totals[0]}</Text>
-          <Text style={styles.totalsScore}>{gamer.totals[1]}</Text>
-          <Text style={styles.totalsScore}>{gamer.totals[2]}</Text>
-          <Text style={styles.totalsScore}>{gamer.totals[3]}</Text>
+        <View key={'total'} style={styles.totalsContainer}>
+          <Text key={'total'} style={styles.totals}>
+            Total
+          </Text>
+          {rounds.map((round: any, index: number) => {
+            return (
+              <Text key={round} style={styles.totalsScore}>
+                {gamer.totals[index]}
+              </Text>
+            );
+          })}
         </View>
-        <View style={styles.top5Container}>
-          <Text style={styles.top5}>Top Five</Text>
-          <Text style={styles.top5Score}>{gamer.scores[0]}</Text>
-          <Text style={styles.top5Score}>{gamer.scores[1]}</Text>
-          <Text style={styles.top5Score}>{gamer.scores[2]}</Text>
-          <Text style={styles.top5Score}>{gamer.scores[3]}</Text>
+        <View key={'top5'} style={styles.top5Container}>
+          <Text key={'top5'} style={styles.top5}>
+            Top Five
+          </Text>
+          {rounds.map((round: any, index: number) => {
+            return (
+              <Text key={round} style={styles.top5Score}>
+                {gamer.scores[index]}
+              </Text>
+            );
+          })}
         </View>
       </>
     );
@@ -53,18 +71,21 @@ export default function GameDetails({ route, navigation }: { route: any; navigat
           ListFooterComponent={footer}
           renderItem={({ item }) => (
             <View style={styles.playerContainer}>
-              <Text style={styles.player} numberOfLines={1}>
+              <Text key={'name'} style={styles.player} numberOfLines={1}>
                 {item.name}
               </Text>
-              <Text style={styles.playerScore}>{item.rounds[0]}</Text>
-              <Text style={styles.playerScore}>{item.rounds[0]}</Text>
-              <Text style={styles.playerScore}>{item.rounds[0]}</Text>
-              <Text style={styles.playerScore}>{item.rounds[0]}</Text>
+              {rounds.map((round: any, index: number) => {
+                return (
+                  <Text key={round} style={styles.playerScore}>
+                    {item.rounds[index]}
+                  </Text>
+                );
+              })}
             </View>
           )}
           keyExtractor={(item) => {
             // console.log(item);
-            return item.objectId;
+            return item.name;
           }}
         />
       </>

@@ -1,19 +1,22 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
 import ErrorText from './ErrorText';
 import { useCurrentGamer } from '../lib/hooks/useCurrentGamer';
 import TournamentItem from './TournamentItem';
 import Loader from './Loader';
+import { AuthContext } from '../lib/AuthContext';
 
 export default function HomeScreen({ navigation }: { navigation: any }) {
-  const [errorMsg] = React.useState<string | undefined>(undefined);
+  const [errorMsg, setErrorMsg] = React.useState<string | undefined>(undefined);
   const gamer = useCurrentGamer();
   const [games, setGames] = React.useState<any>();
 
   useEffect(() => {
     const getGamesAsync = async () => {
       console.log('getting games for gamer ', gamer?.getName());
-      const games = await gamer?.games();
+      const games = await gamer?.games().catch((error) => {
+        setErrorMsg(error.message);
+      });
       setGames(games || []);
     };
 
@@ -21,6 +24,12 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
       getGamesAsync();
     }
   }, [gamer]);
+
+  // if we couldn't get the game info, make the user sign in again
+  if (errorMsg) {
+    const context = useContext(AuthContext);
+    context.signOut();
+  }
 
   const onClick = (id: string) => {
     navigation.navigate('Game', {
@@ -43,7 +52,7 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
             }}
           />
         ) : (
-          <Loader />
+          !errorMsg && <Loader />
         )}
       </View>
       {errorMsg && (

@@ -31,9 +31,9 @@ export default function LeaderboardItem({
             {item?.name}
           </Text>
 
-          {item?.rounds.map((round: any) => {
+          {item?.rounds.map((round: any, index: number) => {
             return (
-              <Text style={round.leader ? styles.linkLeaderScore : styles.linkScore}>
+              <Text key={index} style={round.leader ? styles.linkLeaderScore : styles.linkScore}>
                 {round.score}
               </Text>
             );
