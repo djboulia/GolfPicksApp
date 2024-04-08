@@ -36,20 +36,37 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
     });
   };
 
+  const header = () => {
+    return (
+      <>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{leaderboard?.name}</Text>
+        </View>
+        <View style={styles.leaderboardContainer}>
+          <Text style={styles.leaderboardTitle}>Game Leaderboard</Text>
+          <Text style={styles.leaderboardTitle}>Round {currentRound}</Text>
+        </View>
+      </>
+    );
+  };
+
+  const footer = () => {
+    return (
+      <View style={styles.leaderboardContainer}>
+        <Text style={styles.leaderboardRoundLeader}>Round Leader</Text>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.containerInput}>
         {leaderboard ? (
           <>
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>{leaderboard?.name}</Text>
-            </View>
-            <View style={styles.leaderboardContainer}>
-              <Text style={styles.leaderboardTitle}>Game Leaderboard</Text>
-              <Text style={styles.leaderboardTitle}>Round {currentRound}</Text>
-            </View>
             <FlatList
               data={gamers}
+              ListHeaderComponent={header}
+              ListFooterComponent={footer}
               renderItem={({ item }) => (
                 <LeaderboardItem item={item} currentRound={currentRound} onClick={onClick} />
               )}
@@ -58,9 +75,6 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
                 return item.objectId;
               }}
             />
-            <View style={styles.leaderboardContainer}>
-              <Text style={styles.leaderboardRoundLeader}>Round Leader</Text>
-            </View>
           </>
         ) : (
           <Loader />

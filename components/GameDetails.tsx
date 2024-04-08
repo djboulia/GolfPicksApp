@@ -6,8 +6,8 @@ export default function GameDetails({ route, navigation }: { route: any; navigat
   const { gamer } = route.params;
   const [errorMsg] = React.useState<string | undefined>(undefined);
 
-  return (
-    <View style={styles.container}>
+  const header = () => {
+    return (
       <>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Picks for {gamer?.name}</Text>
@@ -19,9 +19,38 @@ export default function GameDetails({ route, navigation }: { route: any; navigat
           <Text style={styles.headerScore}>3</Text>
           <Text style={styles.headerScore}>4</Text>
         </View>
+      </>
+    );
+  };
 
+  const footer = () => {
+    return (
+      <>
+        <View style={styles.totalsContainer}>
+          <Text style={styles.totals}>Total</Text>
+          <Text style={styles.totalsScore}>{gamer.totals[0]}</Text>
+          <Text style={styles.totalsScore}>{gamer.totals[1]}</Text>
+          <Text style={styles.totalsScore}>{gamer.totals[2]}</Text>
+          <Text style={styles.totalsScore}>{gamer.totals[3]}</Text>
+        </View>
+        <View style={styles.top5Container}>
+          <Text style={styles.top5}>Top Five</Text>
+          <Text style={styles.top5Score}>{gamer.scores[0]}</Text>
+          <Text style={styles.top5Score}>{gamer.scores[1]}</Text>
+          <Text style={styles.top5Score}>{gamer.scores[2]}</Text>
+          <Text style={styles.top5Score}>{gamer.scores[3]}</Text>
+        </View>
+      </>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <>
         <FlatList
           data={gamer.picks}
+          ListHeaderComponent={header}
+          ListFooterComponent={footer}
           renderItem={({ item }) => (
             <View style={styles.playerContainer}>
               <Text style={styles.player} numberOfLines={1}>
@@ -38,22 +67,6 @@ export default function GameDetails({ route, navigation }: { route: any; navigat
             return item.objectId;
           }}
         />
-
-        <View style={styles.totalsContainer}>
-          <Text style={styles.totals}>Total</Text>
-          <Text style={styles.totalsScore}>{gamer.totals[0]}</Text>
-          <Text style={styles.totalsScore}>{gamer.totals[1]}</Text>
-          <Text style={styles.totalsScore}>{gamer.totals[2]}</Text>
-          <Text style={styles.totalsScore}>{gamer.totals[3]}</Text>
-        </View>
-
-        <View style={styles.top5Container}>
-          <Text style={styles.top5}>Top Five</Text>
-          <Text style={styles.top5Score}>{gamer.scores[0]}</Text>
-          <Text style={styles.top5Score}>{gamer.scores[1]}</Text>
-          <Text style={styles.top5Score}>{gamer.scores[2]}</Text>
-          <Text style={styles.top5Score}>{gamer.scores[3]}</Text>
-        </View>
       </>
 
       {errorMsg && (
