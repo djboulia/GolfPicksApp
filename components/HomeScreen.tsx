@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
 import ErrorText from './ErrorText';
 import { useCurrentGamer } from '../lib/hooks/useCurrentGamer';
@@ -7,9 +7,10 @@ import Loader from './Loader';
 import { AuthContext } from '../lib/AuthContext';
 
 export default function HomeScreen({ navigation }: { navigation: any }) {
-  const [errorMsg, setErrorMsg] = React.useState<string | undefined>(undefined);
+  const context = useContext(AuthContext);
+  const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
   const gamer = useCurrentGamer();
-  const [games, setGames] = React.useState<any>();
+  const [games, setGames] = useState<any>();
 
   useEffect(() => {
     const getGamesAsync = async () => {
@@ -27,7 +28,6 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
 
   // if we couldn't get the game info, make the user sign in again
   if (errorMsg) {
-    const context = useContext(AuthContext);
     context.signOut();
   }
 

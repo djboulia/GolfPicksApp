@@ -8,6 +8,7 @@ import { AuthContext } from '../lib/AuthContext';
 
 export default function GameScreen({ route, navigation }: { route: any; navigation: any }) {
   const { id } = route.params;
+  const context = useContext(AuthContext);
   const [errorMsg, setErrorMessage] = React.useState<string | undefined>(undefined);
   const [leaderboard, setLeaderboard] = React.useState<any>();
 
@@ -26,9 +27,9 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
 
   // if we couldn't get the game info, make the user sign in again
   if (errorMsg) {
-    const context = useContext(AuthContext);
     context.signOut();
   }
+
   const currentRound = leaderboard?.roundInfo?.currentRound;
 
   const gamers = leaderboard?.gamers;
