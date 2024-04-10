@@ -6,7 +6,7 @@ export default function LinkContainer({
   children,
 }: {
   style?: any;
-  onPress: () => void;
+  onPress?: () => void;
   children: any;
 }) {
   const containerStyle = style ? style : styles.link;

@@ -1,12 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
+import * as ScreenOrientation from 'expo-screen-orientation';
 import ErrorText from './ErrorText';
 
 export default function GameDetails({ route, navigation }: { route: any; navigation: any }) {
   const { gamer } = route.params;
-  const [errorMsg] = React.useState<string | undefined>(undefined);
+  const [errorMsg] = useState<string | undefined>(undefined);
 
   const rounds = [1, 2, 3, 4];
+
+  const [orientation, setOrientation] = useState<ScreenOrientation.Orientation | null>(null);
+
+  useEffect(() => {
+    checkOrientation();
+    const subscription = ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
+    return () => {
+      ScreenOrientation.removeOrientationChangeListener(subscription);
+    };
+  }, []);
+  const checkOrientation = async () => {
+    const orientation = await ScreenOrientation.getOrientationAsync();
+    setOrientation(orientation);
+  };
+  const handleOrientationChange = (o: any) => {
+    setOrientation(o.orientationInfo.orientation);
+  };
+  console.log('orientation', orientation);
 
   const header = () => {
     return (
@@ -157,7 +176,7 @@ const styles = StyleSheet.create({
   },
   player: {
     ...baseLabelStyle,
-    textAlign: 'center',
+    textAlign: 'left',
     color: defaultDarkTextColor,
     backgroundColor: playerBgColor,
     borderWidth: 0,

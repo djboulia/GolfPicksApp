@@ -15,33 +15,38 @@ export default function LeaderboardItem({
   console.log('item: ', item);
   console.log('currentRound: ', item?.rounds, currentRound);
 
+  const scores = [{ score: 0, styles: {} }];
+
   return (
     <View style={styles.container}>
-      <View>
-        <LinkContainer
-          style={styles.linkContainer}
-          onPress={() => {
-            console.log(`link ${item.eventid} pressed`);
-            if (onClick) {
-              onClick(item);
-            }
-          }}
-        >
-          <Text style={styles.linkLabel} numberOfLines={1}>
-            {item?.name}
-          </Text>
+      <LinkContainer
+        style={styles.linkContainer}
+        onPress={() => {
+          console.log(`link ${item.eventid} pressed`);
+          if (onClick) {
+            onClick(item);
+          }
+        }}
+      >
+        <Text style={styles.linkLabel} numberOfLines={1}>
+          {item?.name}
+        </Text>
 
-          {item?.rounds.map((round: any, index: number) => {
-            return (
-              <Text key={index} style={round.leader ? styles.linkLeaderScore : styles.linkScore}>
-                {round.score}
-              </Text>
-            );
-          })}
+        {item?.rounds.map((round: any, index: number) => {
+          return (
+            <Text
+              key={index}
+              style={
+                round.leader ? { ...styles.linkScore, ...styles.linkLeaderScore } : styles.linkScore
+              }
+            >
+              {round.score}
+            </Text>
+          );
+        })}
 
-          <Ionicons name="chevron-forward" size={30} color="#fff" />
-        </LinkContainer>
-      </View>
+        <Ionicons name="chevron-forward" size={30} color="#fff" />
+      </LinkContainer>
     </View>
   );
 }
@@ -79,19 +84,12 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     color: defaultColor,
   },
-  linkLeaderLabel: {
-    ...linkLabelBase,
-    flex: 3,
-    color: leaderColor,
-  },
   linkScore: {
     ...linkScoreBase,
     flex: 1,
     color: defaultColor,
   },
   linkLeaderScore: {
-    ...linkScoreBase,
-    flex: 1,
     color: leaderColor,
   },
 });

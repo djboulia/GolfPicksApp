@@ -5,6 +5,7 @@ import LeaderboardItem from './LeaderboardItem';
 import { Games } from '../lib/api/Games';
 import Loader from './Loader';
 import { AuthContext } from '../lib/AuthContext';
+import LeaderboardHeader from './LeaderboardHeader';
 
 export default function GameScreen({ route, navigation }: { route: any; navigation: any }) {
   const { id } = route.params;
@@ -54,8 +55,8 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
         </View>
         <View style={styles.leaderboardContainer}>
           <Text style={styles.leaderboardTitle}>Game Leaderboard</Text>
-          <Text style={styles.leaderboardTitle}>Round {currentRound}</Text>
         </View>
+        <LeaderboardHeader roundTitles={['R1', 'R2', 'R3', 'R4']} />
       </>
     );
   };
