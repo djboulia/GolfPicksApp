@@ -1,9 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, ActivityIndicator } from 'react-native';
 
 export default function Loader({ message }: { message?: string }) {
-  // TODO: implement a fancy loader
-  return <Text>{message ? message : 'Loading...'}</Text>;
+  return <ActivityIndicator size="large" color="#005500" />;
 }
 
 const styles = StyleSheet.create({});
