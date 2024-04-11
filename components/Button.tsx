@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable, Text } from 'react-native';
+import { StyleSheet, View, Pressable, Text, Button as ButtonReactNative } from 'react-native';
 
 export default function Button({
   label,
@@ -11,14 +11,14 @@ export default function Button({
 }) {
   return (
     <View style={styles.buttonContainer}>
-      <Pressable
-        style={styles.button}
+      <ButtonReactNative
+        color="#005500"
+        title={label}
+        disabled={!enabled}
         onPress={() => {
           if (enabled && onPress) onPress();
         }}
-      >
-        <Text style={enabled ? styles.text : styles.textDisabled}>{label}</Text>
-      </Pressable>
+      />
     </View>
   );
 }
