@@ -13,39 +13,48 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
   const context = useContext(AuthContext);
   const [errorMsg, setErrorMessage] = React.useState<string | undefined>(undefined);
   const [leaderboard, setLeaderboard] = React.useState<any>();
+  const [refreshing, setRefreshing] = React.useState<boolean>(false);
+
+  const getGameAsync = async (id: string) => {
+    console.log('getting game ', id);
+
+    setRefreshing(true);
+
+    const leaderboard = await Games.leaderboard(id).catch((error) => {
+      console.log('error getting game: ', error);
+      setErrorMessage(error.message);
+    });
+
+    // sort the leaders by lowest score in current round
+    // if there are ties, sort by previous rounds
+    const currentRound = leaderboard?.roundInfo?.currentRound;
+    const gamers = leaderboard?.gamers;
+    gamers?.sort((a: any, b: any) => {
+      for (let i = currentRound; i >= 0; i--) {
+        const result = compareScores(
+          a.rounds[currentRound - 1]?.score,
+          b.rounds[currentRound - 1]?.score,
+        );
+        if (result !== 0) return result;
+      }
+      return 0;
+    });
+
+    // console.log('sorted gamers ', gamers);
+
+    setLeaderboard(leaderboard || []);
+    setRefreshing(false);
+  };
 
   useEffect(() => {
-    const getGameAsync = async (id: string) => {
-      console.log('getting game ', id);
-
-      const leaderboard = await Games.leaderboard(id).catch((error) => {
-        console.log('error getting game: ', error);
-        setErrorMessage(error.message);
-      });
-
-      // sort the leaders by lowest score in current round
-      // if there are ties, sort by previous rounds
-      const currentRound = leaderboard?.roundInfo?.currentRound;
-      const gamers = leaderboard?.gamers;
-      gamers?.sort((a: any, b: any) => {
-        for (let i = currentRound; i >= 0; i--) {
-          const result = compareScores(
-            a.rounds[currentRound - 1]?.score,
-            b.rounds[currentRound - 1]?.score,
-          );
-          if (result !== 0) return result;
-        }
-        return 0;
-      });
-
-      // console.log('sorted gamers ', gamers);
-
-      setLeaderboard(leaderboard || []);
-    };
-
     // console.log('getting game ', id);
     getGameAsync(id);
   }, []);
+
+  const onRefresh = () => {
+    console.log('onRefresh');
+    getGameAsync(id);
+  };
 
   // if we couldn't get the game info, make the user sign in again
   if (errorMsg) {
@@ -94,6 +103,8 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
           <>
             <FlatList
               data={gamers}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
               ListHeaderComponent={header}
               ListFooterComponent={footer}
               renderItem={({ item }) => (
