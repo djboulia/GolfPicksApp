@@ -14,7 +14,6 @@ export default function GameDetails({ route, navigation }: { route: any; navigat
   // if there are ties, sort by previous rounds
   gamer.picks?.sort((a: any, b: any) => {
     for (let i = currentRound; i >= 0; i--) {
-      console.log('a.rounds[i]', a.rounds[i]);
       const result = compareScores(a.rounds[i], b.rounds[i]);
 
       if (result !== 0) return result;
@@ -38,6 +37,7 @@ export default function GameDetails({ route, navigation }: { route: any; navigat
     setOrientation(orientation);
   };
   const handleOrientationChange = (o: any) => {
+    console.log('orientation changed', o.orientationInfo.orientation);
     setOrientation(o.orientationInfo.orientation);
   };
   console.log('orientation', orientation);

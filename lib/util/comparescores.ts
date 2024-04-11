@@ -14,7 +14,7 @@ export const compareScores = (scoreA: any, scoreB: any) => {
   const roundA = formatScore(scoreA);
   const roundB = formatScore(scoreB);
 
-  console.log('roundA: ', roundA, ' roundB: ', roundB);
+  //   console.log('roundA: ', roundA, ' roundB: ', roundB);
 
   // all non scores (WD, CUT, '-', etc.) will sort to the bottom
   // we further sort WDs to the very bottom
