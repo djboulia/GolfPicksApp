@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import { Storage } from '../Storage';
 import { getBaseUrl } from '../util/url';
-import { ApiFetch } from '../util/fetch';
+import { ApiFetch } from '../util/apifetch';
 
 const getUrl = () => {
   return getBaseUrl() + `/Gamers`;

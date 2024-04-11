@@ -1,4 +1,4 @@
-import { ApiFetch } from '../util/fetch';
+import { ApiFetch } from '../util/apifetch';
 import { getBaseUrl } from '../util/url';
 
 const getUrl = () => {
