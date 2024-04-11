@@ -1,8 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, ActivityIndicator, View } from 'react-native';
 
 export default function Loader({ message }: { message?: string }) {
-  return <ActivityIndicator size="large" color="#005500" />;
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color="#005500" />
+    </View>
+  );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    height: '100%',
+  },
+});
