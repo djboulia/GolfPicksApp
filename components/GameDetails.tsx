@@ -2,12 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import ErrorText from './ErrorText';
+import { compareScores } from '../lib/util/comparescores';
 
 export default function GameDetails({ route, navigation }: { route: any; navigation: any }) {
-  const { gamer } = route.params;
+  const { gamer, currentRound } = route.params;
   const [errorMsg] = useState<string | undefined>(undefined);
 
   const rounds = [1, 2, 3, 4];
+
+  // sort the leaders by lowest score in current round
+  // if there are ties, sort by previous rounds
+  gamer.picks?.sort((a: any, b: any) => {
+    for (let i = currentRound; i >= 0; i--) {
+      console.log('a.rounds[i]', a.rounds[i]);
+      const result = compareScores(a.rounds[i], b.rounds[i]);
+
+      if (result !== 0) return result;
+      // continue on looking at prior rounds if first round is a tie
+    }
+    return 0;
+  });
 
   const [orientation, setOrientation] = useState<ScreenOrientation.Orientation | null>(null);
 
@@ -18,6 +32,7 @@ export default function GameDetails({ route, navigation }: { route: any; navigat
       ScreenOrientation.removeOrientationChangeListener(subscription);
     };
   }, []);
+
   const checkOrientation = async () => {
     const orientation = await ScreenOrientation.getOrientationAsync();
     setOrientation(orientation);

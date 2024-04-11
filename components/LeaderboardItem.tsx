@@ -12,8 +12,8 @@ export default function LeaderboardItem({
   currentRound: number;
   onClick?: (item: any) => void;
 }) {
-  console.log('item: ', item);
-  console.log('currentRound: ', item?.rounds, currentRound);
+  // console.log('item: ', item);
+  // console.log('currentRound: ', item?.rounds, currentRound);
 
   const scores = [{ score: 0, styles: {} }];
 

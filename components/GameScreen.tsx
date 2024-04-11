@@ -6,6 +6,7 @@ import { Games } from '../lib/api/Games';
 import Loader from './Loader';
 import { AuthContext } from '../lib/AuthContext';
 import LeaderboardHeader from './LeaderboardHeader';
+import { compareScores } from '../lib/util/comparescores';
 
 export default function GameScreen({ route, navigation }: { route: any; navigation: any }) {
   const { id } = route.params;
@@ -15,10 +16,30 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
 
   useEffect(() => {
     const getGameAsync = async (id: string) => {
+      console.log('getting game ', id);
+
       const leaderboard = await Games.leaderboard(id).catch((error) => {
         console.log('error getting game: ', error);
         setErrorMessage(error.message);
       });
+
+      // sort the leaders by lowest score in current round
+      // if there are ties, sort by previous rounds
+      const currentRound = leaderboard?.roundInfo?.currentRound;
+      const gamers = leaderboard?.gamers;
+      gamers?.sort((a: any, b: any) => {
+        for (let i = currentRound; i >= 0; i--) {
+          const result = compareScores(
+            a.rounds[currentRound - 1]?.score,
+            b.rounds[currentRound - 1]?.score,
+          );
+          if (result !== 0) return result;
+        }
+        return 0;
+      });
+
+      // console.log('sorted gamers ', gamers);
+
       setLeaderboard(leaderboard || []);
     };
 
@@ -32,18 +53,15 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
   }
 
   const currentRound = leaderboard?.roundInfo?.currentRound;
+  console.log('current round: ', currentRound);
 
   const gamers = leaderboard?.gamers;
-  gamers?.sort((a: any, b: any) => {
-    const roundA = a.rounds[currentRound - 1];
-    const roundB = b.rounds[currentRound - 1];
-    return roundA.score - roundB.score;
-  });
 
   const onClick = (gamer: any) => {
     console.log('clicked on ', gamer);
     navigation.navigate('GameDetails', {
       gamer: gamer,
+      currentRound: currentRound,
     });
   };
 
