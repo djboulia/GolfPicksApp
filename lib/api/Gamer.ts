@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import { Storage } from '../Storage';
 import { getBaseUrl } from '../util/url';
+import { ApiFetch } from '../util/fetch';
 
 const getUrl = () => {
   return getBaseUrl() + `/Gamers`;
@@ -27,27 +28,16 @@ export class Gamer {
     const baseUrl = getUrl();
     const url = baseUrl + '/login';
 
-    const response = await fetch(url, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username: username, password: password }),
-    }).catch((error) => {
+    const json = await ApiFetch.post(
+      url,
+      JSON.stringify({ username: username, password: password }),
+    ).catch((error) => {
       console.log('login error for URL: ', url);
       if (Platform.OS === 'android') {
         console.log(`is your local ip address: ${getBaseUrl()}?`);
       }
       throw error;
     });
-
-    const json = await response.json();
-    if (response.status !== 200) {
-      console.log('login error for URL: ', url);
-      throw new Error(json.message);
-    }
 
     // set current gamer in app storage
     await Storage.setItem(GAMER_KEY, JSON.stringify(json));
@@ -68,6 +58,11 @@ export class Gamer {
     return this.gamerObject.name;
   }
 
+  public getId(): string {
+    console.log('gamerObject', this.gamerObject);
+    return this.gamerObject.id;
+  }
+
   public async logout() {
     await Storage.removeItem(GAMER_KEY);
     return true;
@@ -77,23 +72,7 @@ export class Gamer {
     const baseUrl = getUrl();
     const url = baseUrl + `/${this.gamerObject.id}/Games`;
 
-    const response = await fetch(url, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    }).catch((error) => {
-      console.log('error for URL: ', url);
-      throw error;
-    });
-
-    const json = await response.json();
-    if (response.status !== 200) {
-      console.log('error for URL: ', url);
-      throw new Error(json.message);
-    }
+    const json = await ApiFetch.get(url);
 
     // console.log('games: ', JSON.stringify(json));
     return json;

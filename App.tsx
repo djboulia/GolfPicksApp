@@ -11,6 +11,7 @@ import { useCurrentGamer } from './lib/hooks/useCurrentGamer';
 import { AuthContext } from './lib/AuthContext';
 import GameScreen from './components/GameScreen';
 import GameDetails from './components/GameDetails';
+import PicksScreen from './components/PIcksScreen';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -71,6 +72,7 @@ export default function App() {
           component={GameDetails}
         />
         <Drawer.Screen name="Player" component={ProfileScreen} />
+        <Drawer.Screen name="Picks" component={PicksScreen} />
       </Stack.Navigator>
     );
   }

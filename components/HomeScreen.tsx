@@ -5,6 +5,7 @@ import { useCurrentGamer } from '../lib/hooks/useCurrentGamer';
 import TournamentItem from './TournamentItem';
 import Loader from './Loader';
 import { AuthContext } from '../lib/AuthContext';
+import CurrentGameHeader from './CurrentGameHeader';
 
 export default function HomeScreen({ navigation }: { navigation: any }) {
   const context = useContext(AuthContext);
@@ -37,10 +38,20 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
     });
   };
 
+  const updatePicks = (gameid: string, name: string) => {
+    console.log('updatePicks ', gameid, name);
+    navigation.navigate('Picks', {
+      gameid: gameid,
+      name: name,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.containerInput}>
         <Text style={styles.title}>Games for {gamer?.getName()}</Text>
+
+        <CurrentGameHeader activeGame={games?.active} onClick={updatePicks} />
 
         {games ? (
           <FlatList
