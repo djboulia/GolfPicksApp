@@ -2,32 +2,34 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import Link from './Link';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import LinkContainer from './LinkContainer';
 
 export default function TournamentItem({
-  item,
+  name,
+  id,
   onClick,
 }: {
-  item: any;
+  name: string;
+  id: string;
   onClick?: (id: string) => void;
 }) {
   // console.log('item: ', item);
 
   return (
     <View style={styles.container}>
-      <View style={styles.linkContainer}>
-        <Link
-          label={item?.event}
-          style={styles.linkLabel}
-          onPress={() => {
-            console.log(`link ${item.eventid} pressed`);
-            if (onClick) {
-              onClick(item.eventid);
-            }
-          }}
-        />
+      <LinkContainer
+        style={styles.linkContainer}
+        onPress={() => {
+          console.log(`link ${id} pressed`);
+          if (onClick) {
+            onClick(id);
+          }
+        }}
+      >
+        <Text style={styles.linkLabel}> {name}</Text>
 
         <Ionicons name="chevron-forward" size={30} color="#005500" />
-      </View>
+      </LinkContainer>
     </View>
   );
 }
@@ -40,7 +42,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   linkContainer: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,

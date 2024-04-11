@@ -23,7 +23,7 @@ export default function CurrentGameHeader({
   if (activeGame?.inProgress) {
     return (
       <View style={styles.container}>
-        <Text style={styles.inProgress}>Tournament in Progress</Text>;
+        <Text style={styles.inProgress}>Tournament in Progress</Text>
       </View>
     );
   }
@@ -72,8 +72,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   inProgress: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: '#005500',
+    fontSize: 20,
     padding: 10,
   },
 });

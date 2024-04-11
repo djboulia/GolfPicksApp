@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
 import ErrorText from './ErrorText';
 import { useCurrentGamer } from '../lib/hooks/useCurrentGamer';
 import TournamentItem from './TournamentItem';
@@ -53,10 +53,22 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
 
         <CurrentGameHeader activeGame={games?.active} onClick={updatePicks} />
 
+        {games?.active?.inProgress && (
+          <View style={{ backgroundColor: '#dff0d8' }}>
+            <TournamentItem name={games.active.event} id={games.active.eventid} onClick={onClick} />
+          </View>
+        )}
+
         {games ? (
           <FlatList
             data={games.history}
-            renderItem={({ item }) => <TournamentItem item={item} onClick={onClick} />}
+            renderItem={({ item }) => (
+              <TournamentItem
+                name={item?.event ? item.event : ''}
+                id={item?.eventid}
+                onClick={onClick}
+              />
+            )}
             keyExtractor={(item) => {
               // console.log(item);
               return item.eventid;
