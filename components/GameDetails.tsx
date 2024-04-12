@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
-import * as ScreenOrientation from 'expo-screen-orientation';
 import ErrorText from './ErrorText';
 import { compareScores } from '../lib/util/comparescores';
 
@@ -21,26 +20,6 @@ export default function GameDetails({ route, navigation }: { route: any; navigat
     }
     return 0;
   });
-
-  const [orientation, setOrientation] = useState<ScreenOrientation.Orientation | null>(null);
-
-  useEffect(() => {
-    checkOrientation();
-    const subscription = ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
-    return () => {
-      ScreenOrientation.removeOrientationChangeListener(subscription);
-    };
-  }, []);
-
-  const checkOrientation = async () => {
-    const orientation = await ScreenOrientation.getOrientationAsync();
-    setOrientation(orientation);
-  };
-  const handleOrientationChange = (o: any) => {
-    console.log('orientation changed', o.orientationInfo.orientation);
-    setOrientation(o.orientationInfo.orientation);
-  };
-  console.log('orientation', orientation);
 
   const header = () => {
     return (

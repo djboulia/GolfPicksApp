@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import * as ScreenOrientation from 'expo-screen-orientation';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -39,6 +40,9 @@ export default function App() {
   );
 
   useEffect(() => {
+    // allow rotattion to change the layout
+    ScreenOrientation.unlockAsync();
+
     if (gamer) {
       console.log('gamer found, setting logged in to true');
       setLoggedIn(true);
