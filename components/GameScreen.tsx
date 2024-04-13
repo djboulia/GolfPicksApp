@@ -31,10 +31,7 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
     const gamers = leaderboard?.gamers;
     gamers?.sort((a: any, b: any) => {
       for (let i = currentRound; i >= 0; i--) {
-        const result = compareScores(
-          a.rounds[currentRound - 1]?.score,
-          b.rounds[currentRound - 1]?.score,
-        );
+        const result = compareScores(a.rounds[i]?.score, b.rounds[i]?.score);
         if (result !== 0) return result;
       }
       return 0;
