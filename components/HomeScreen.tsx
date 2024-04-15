@@ -12,20 +12,30 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
   const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
   const gamer = useCurrentGamer();
   const [games, setGames] = useState<any>();
+  const [refreshing, setRefreshing] = React.useState<boolean>(false);
+
+  const getGamesAsync = async () => {
+    setRefreshing(true);
+
+    console.log('getting games for gamer ', gamer?.getName());
+    const games = await gamer?.games().catch((error) => {
+      setErrorMsg(error.message);
+    });
+
+    setGames(games || []);
+    setRefreshing(false);
+  };
 
   useEffect(() => {
-    const getGamesAsync = async () => {
-      console.log('getting games for gamer ', gamer?.getName());
-      const games = await gamer?.games().catch((error) => {
-        setErrorMsg(error.message);
-      });
-      setGames(games || []);
-    };
-
     if (gamer) {
       getGamesAsync();
     }
   }, [gamer]);
+
+  const onRefresh = () => {
+    console.log('onRefresh HomeScreen');
+    getGamesAsync();
+  };
 
   // if we couldn't get the game info, make the user sign in again
   if (errorMsg) {
@@ -62,6 +72,8 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
         {games ? (
           <FlatList
             data={games.history}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
             renderItem={({ item }) => (
               <TournamentItem
                 name={item?.event ? item.event : ''}
