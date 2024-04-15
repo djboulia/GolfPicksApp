@@ -16,11 +16,11 @@ export default function CurrentGameHeader({
 }) {
   console.log('activeGame', activeGame);
 
-  if (!activeGame) {
+  if (!activeGame?.inProgress) {
     return;
   }
 
-  if (activeGame?.inProgress) {
+  if (activeGame.inProgress) {
     return (
       <View style={styles.container}>
         <Text style={styles.inProgress}>Tournament in Progress</Text>
@@ -28,7 +28,7 @@ export default function CurrentGameHeader({
     );
   }
 
-  if (activeGame?.joined) {
+  if (activeGame.joined) {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>{activeGame.event}</Text>

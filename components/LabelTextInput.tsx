@@ -1,10 +1,10 @@
-import React from "react";
-import { StyleSheet, View, TextInput, Text } from "react-native";
+import React from 'react';
+import { StyleSheet, View, TextInput, Text } from 'react-native';
 
 export enum InputTypes {
-  text = "text",
-  email = "email",
-  password = "password",
+  text = 'text',
+  email = 'email',
+  password = 'password',
 }
 
 export default function LabelTextInput({
@@ -34,9 +34,10 @@ export default function LabelTextInput({
           onBlur={() => setFocus(false)}
           onChangeText={onChange}
           value={value}
-          inputMode={type === "email" ? "email" : "text"}
+          inputMode={type === 'email' ? 'email' : 'text'}
+          autoCapitalize={type === 'email' || type === 'password' ? 'none' : undefined}
           placeholder={placeholder}
-          secureTextEntry={type === "password" ? true : false}
+          secureTextEntry={type === 'password' ? true : false}
         />
       </View>
     </View>
@@ -51,18 +52,18 @@ const styles = StyleSheet.create({
     width: 300,
     height: 40,
     padding: 8,
-    borderColor: "gray",
+    borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 5,
-    backgroundColor: "#eaf0ea",
+    backgroundColor: '#eaf0ea',
   },
   inputFocused: {
     width: 300,
     height: 40,
     padding: 8,
-    borderColor: "#80aa80",
+    borderColor: '#80aa80',
     borderWidth: 2,
     borderRadius: 5,
-    backgroundColor: "#eaf0ea",
+    backgroundColor: '#eaf0ea',
   },
 });
