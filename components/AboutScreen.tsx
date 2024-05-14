@@ -10,7 +10,10 @@ export default function AboutScreen({ navigation }: { navigation: any }) {
   return (
     <View style={styles.container}>
       <View style={styles.containerInput}>
-        <Text style={styles.title}>About Screen goes here</Text>
+        <Text style={styles.title}>This is the GolfPicks App</Text>
+        <Text style={styles.list}>Implemented with Expo and React Native</Text>
+        <Text style={styles.list}>Server side API built in Node.js</Text>
+        <Text style={styles.list}>Golf data hosted in AWS</Text>
       </View>
     </View>
   );
@@ -18,7 +21,6 @@ export default function AboutScreen({ navigation }: { navigation: any }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
@@ -33,6 +35,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: 'bold',
+    padding: 10,
+  },
+  list: {
+    fontSize: 20,
+    padding: 10,
   },
   containerInput: {
     backgroundColor: '#fff',
