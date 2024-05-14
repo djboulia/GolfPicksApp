@@ -22,6 +22,7 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
       setErrorMsg(error.message);
     });
 
+    // console.log('games ', games);
     setGames(games || []);
     setRefreshing(false);
   };

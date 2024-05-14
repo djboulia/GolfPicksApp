@@ -16,10 +16,6 @@ export default function CurrentGameHeader({
 }) {
   console.log('activeGame', activeGame);
 
-  if (!activeGame?.inProgress) {
-    return;
-  }
-
   if (activeGame.inProgress) {
     return (
       <View style={styles.container}>
@@ -29,6 +25,7 @@ export default function CurrentGameHeader({
   }
 
   if (activeGame.joined) {
+    console.log('activeGame.joined', activeGame.joined);
     return (
       <View style={styles.container}>
         <Text style={styles.title}>{activeGame.event}</Text>
