@@ -18,7 +18,7 @@ export default function PicksScreen({ route, navigation }: { route: any; navigat
   const context = useContext(AuthContext);
   const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
   const gamer = useCurrentGamer();
-  const [picks, setPicks] = useState<any>();
+  const [picks, setPicks] = useState<any[]>();
   const [game, setGame] = useState<any>();
   const [event, setEvent] = useState<any>();
   const [golfers, setGolfers] = useState<any[]>([]);
@@ -78,12 +78,17 @@ export default function PicksScreen({ route, navigation }: { route: any; navigat
 
       if (gamer?.getId()) {
         const result = await Games.picks(id, gamer?.getId()).catch((error: any) => {
-          console.log('error getting picks: ', error);
+          if (error?.message?.includes('not found')) {
+            // haven't made picks yet
+            return undefined;
+          }
+          console.log('error getting picks: ', error.status, error.message);
           setErrorMsg(error.message);
         });
         // console.log('result ', result);
 
-        setPicks(result.picks || {});
+        const picks = result?.picks || [];
+        setPicks(picks);
 
         const game = await Games.gameDay(id).catch((error: any) => {
           console.log('error getting game: ', error);
@@ -100,7 +105,7 @@ export default function PicksScreen({ route, navigation }: { route: any; navigat
 
         setEvent(event);
 
-        initSelections(event?.golfers, result.picks);
+        initSelections(event?.golfers, picks);
         setLoadingMessage(undefined);
       } else {
         console.log('No gamer found');
@@ -141,15 +146,19 @@ export default function PicksScreen({ route, navigation }: { route: any; navigat
   const asyncUpdatePicks = async (gameid: string, gamerid: string, picks: any[]) => {
     setLoadingMessage('Saving picks...');
 
-    await Games.updatePicks(gameid, gamerid, picks).catch((error: any) => {
+    const result = await Games.updatePicks(gameid, gamerid, picks).catch((error: any) => {
       console.log('error updating picks: ', error);
       setLoadingMessage(undefined);
       setErrorMsg(error.message);
+      return undefined;
     });
 
-    setLoadingMessage(undefined);
+    if (result) {
+      setLoadingMessage(undefined);
 
-    console.log('saved picks ', picks);
+      console.log('saved picks ', picks);
+      navigation.goBack();
+    }
   };
 
   const updatePicks = () => {
