@@ -16,6 +16,8 @@ export default function CurrentGameHeader({
 }) {
   console.log('activeGame', activeGame);
 
+  if (!activeGame) return null;
+
   if (activeGame.inProgress) {
     return (
       <View style={styles.container}>

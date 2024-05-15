@@ -74,6 +74,8 @@ export default function PicksScreen({ route, navigation }: { route: any; navigat
 
   useEffect(() => {
     const getPicksAsync = async (id: string) => {
+      setLoadingMessage('Loading...');
+
       if (gamer?.getId()) {
         const result = await Games.picks(id, gamer?.getId()).catch((error: any) => {
           console.log('error getting picks: ', error);
@@ -99,6 +101,7 @@ export default function PicksScreen({ route, navigation }: { route: any; navigat
         setEvent(event);
 
         initSelections(event?.golfers, result.picks);
+        setLoadingMessage(undefined);
       } else {
         console.log('No gamer found');
       }
