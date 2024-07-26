@@ -1,16 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
-import ErrorText from './ErrorText';
-import { useCurrentGamer } from '../lib/hooks/useCurrentGamer';
-import TournamentItem from './TournamentItem';
-import Loader from './Loader';
-import { AuthContext } from '../lib/AuthContext';
-import CurrentGameHeader from './CurrentGameHeader';
+import ErrorText from '@/components/ErrorText';
+import { useCurrentGamer } from '@/hooks/useCurrentGamer';
+import TournamentItem from '@/components/TournamentItem';
+import Loader from '@/components/Loader';
+import CurrentGameHeader from '@/components/CurrentGameHeader';
+import { useRouter } from 'expo-router';
 
-export default function HomeScreen({ navigation }: { navigation: any }) {
-  const context = useContext(AuthContext);
+export default function HomeScreen() {
+  const router = useRouter();
   const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
-  const gamer = useCurrentGamer();
+  const [gamer] = useCurrentGamer();
   const [games, setGames] = useState<any>();
   const [refreshing, setRefreshing] = React.useState<boolean>(false);
 
@@ -18,7 +18,8 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
     setRefreshing(true);
 
     console.log('getting games for gamer ', gamer?.getName());
-    const games = await gamer?.games().catch((error) => {
+    const games = await gamer?.games().catch((error: any) => {
+      console.log('error getting games: ', error);
       setErrorMsg(error.message);
     });
 
@@ -40,22 +41,21 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
 
   // if we couldn't get the game info, make the user sign in again
   if (errorMsg) {
-    context.signOut();
+    console.log('could not load games due to error: ', errorMsg);
+    router.push('/error?message=' + errorMsg);
   }
 
   const onClick = (id: string) => {
-    navigation.navigate('Game', {
-      id: id,
-    });
+    router.push('/games/game?id=' + id);
   };
 
   const updatePicks = (gameid: string, name: string) => {
     console.log('updatePicks ', gameid, name);
-    navigation.navigate('Picks', {
-      gameid: gameid,
-      name: name,
-    });
+    router.push('/games/picks?gameId=' + gameid + '&name=' + name);
   };
+
+  // console.log('games.active ', games?.active);
+  // console.log('games.history', games?.history);
 
   return (
     <View style={styles.container}>

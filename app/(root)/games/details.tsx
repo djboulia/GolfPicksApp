@@ -1,25 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
-import ErrorText from './ErrorText';
-import { compareScores } from '../lib/util/comparescores';
+import ErrorText from '@/components/ErrorText';
+import { compareScores } from '../../../lib/util/comparescores';
+import { useLocalSearchParams } from 'expo-router';
+import { useLeaderboard } from '@/hooks/useLeaderboard';
+import Loader from '@/components/Loader';
 
-export default function GameDetails({ route, navigation }: { route: any; navigation: any }) {
-  const { gamer, currentRound } = route.params;
+export default function DetailsScreen() {
+  const params = useLocalSearchParams<{ gameId: string; gamerId: string; currentRound: string }>();
+  const { gameId, gamerId, currentRound } = params;
   const [errorMsg] = useState<string | undefined>(undefined);
+  const { leaderboard, loaded } = useLeaderboard(gameId ?? '');
+  const [gamer, setGamer] = useState<any>(undefined);
 
   const rounds = [1, 2, 3, 4];
 
-  // sort the leaders by lowest score in current round
-  // if there are ties, sort by previous rounds
-  gamer.picks?.sort((a: any, b: any) => {
-    for (let i = currentRound; i >= 0; i--) {
-      const result = compareScores(a.rounds[i], b.rounds[i]);
+  useEffect(() => {
+    if (loaded && leaderboard) {
+      console.log('leaderboard ', leaderboard);
 
-      if (result !== 0) return result;
-      // continue on looking at prior rounds if first round is a tie
+      // find the gamer in the leaderboard
+      const gamers = leaderboard.gamers;
+      const gamer = gamers.find((g: any) => g.objectId === gamerId);
+      console.log('gamerId', gamerId, 'found gamer', gamer);
+
+      // sort the leaders by lowest score in current round
+      // if there are ties, sort by previous rounds
+      gamer?.picks?.sort((a: any, b: any) => {
+        for (let i = Number(currentRound); i >= 0; i--) {
+          const result = compareScores(a.rounds[i], b.rounds[i]);
+
+          if (result !== 0) return result;
+          // continue on looking at prior rounds if first round is a tie
+        }
+        return 0;
+      });
+
+      setGamer(gamer);
     }
-    return 0;
-  });
+  }, [loaded, leaderboard]);
 
   const header = () => {
     return (
@@ -78,29 +97,33 @@ export default function GameDetails({ route, navigation }: { route: any; navigat
   return (
     <View style={styles.container}>
       <>
-        <FlatList
-          data={gamer.picks}
-          ListHeaderComponent={header}
-          ListFooterComponent={footer}
-          renderItem={({ item }) => (
-            <View style={styles.playerContainer}>
-              <Text key={'name'} style={styles.player} numberOfLines={1}>
-                {item.name}
-              </Text>
-              {rounds.map((round: any, index: number) => {
-                return (
-                  <Text key={round} style={styles.playerScore}>
-                    {item.rounds[index]}
-                  </Text>
-                );
-              })}
-            </View>
-          )}
-          keyExtractor={(item) => {
-            // console.log(item);
-            return item.name;
-          }}
-        />
+        {gamer ? (
+          <FlatList
+            data={gamer.picks}
+            ListHeaderComponent={header}
+            ListFooterComponent={footer}
+            renderItem={({ item }) => (
+              <View style={styles.playerContainer}>
+                <Text key={'name'} style={styles.player} numberOfLines={1}>
+                  {item.name}
+                </Text>
+                {rounds.map((round: any, index: number) => {
+                  return (
+                    <Text key={round} style={styles.playerScore}>
+                      {item.rounds[index]}
+                    </Text>
+                  );
+                })}
+              </View>
+            )}
+            keyExtractor={(item) => {
+              // console.log(item);
+              return item.name;
+            }}
+          />
+        ) : (
+          !errorMsg && <Loader />
+        )}
       </>
 
       {errorMsg && (

@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useCurrentGamer } from '../lib/hooks/useCurrentGamer';
-import { AuthContext } from '../lib/AuthContext';
+import { useCurrentGamer } from '@/hooks/useCurrentGamer';
+import { useSession } from '@/hooks/SessionProvider';
 
 export default function LogoutScreen() {
-  const gamer = useCurrentGamer();
+  const [gamer] = useCurrentGamer();
 
-  const { signOut } = React.useContext(AuthContext);
+  const { signOut } = useSession();
 
   useEffect(() => {
     async function logout() {

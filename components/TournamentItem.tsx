@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import Link from './Link';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import LinkContainer from './LinkContainer';
 

@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable, Text, Button as ButtonReactNative } from 'react-native';
+import { StyleSheet, View, Button as ButtonReactNative } from 'react-native';
 
 export default function Button({
   label,

@@ -1,24 +1,24 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, KeyboardAvoidingView, Platform } from 'react-native';
-import LabelTextInput, { InputTypes } from './LabelTextInput';
-import Button from './Button';
-import ErrorText from './ErrorText';
+import LabelTextInput, { InputTypes } from '@/components/LabelTextInput';
+import Button from '@/components/Button';
+import ErrorText from '@/components/ErrorText';
 
 import { Gamer } from '../lib/api/Gamer';
-import { useCurrentGamer } from '../lib/hooks/useCurrentGamer';
-import { AuthContext } from '../lib/AuthContext';
+import { useSession } from '@/hooks/SessionProvider';
+import { useRouter } from 'expo-router';
 
 const GolfPicksLogo = require('../assets/images/golfpicks.png');
 
-export default function LoginScreen({ navigation }: { navigation: any }) {
+export default function Login() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [errorMsg, setErrorMsg] = React.useState<string | undefined>(undefined);
   const [inProgress, setInProgress] = React.useState(false);
-  const gamer = useCurrentGamer();
+  const router = useRouter();
 
-  const { signIn } = React.useContext(AuthContext);
+  const { signIn } = useSession();
 
   const onLogin = () => {
     if (inProgress) {
@@ -35,7 +35,9 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
           console.log('login: ', gamer);
           setErrorMsg(undefined);
           signIn();
+          router.push('/games');
         } else {
+          console.log('gamer is undefined');
           setErrorMsg('Error logging in.');
         }
       })

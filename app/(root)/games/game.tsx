@@ -1,19 +1,22 @@
-import React, { useContext, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
-import ErrorText from './ErrorText';
-import LeaderboardItem from './LeaderboardItem';
-import { Games } from '../lib/api/Games';
-import Loader from './Loader';
-import { AuthContext } from '../lib/AuthContext';
-import LeaderboardHeader from './LeaderboardHeader';
-import { compareScores } from '../lib/util/comparescores';
+import { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
+import ErrorText from '@/components/ErrorText';
+import LeaderboardItem from '@/components/LeaderboardItem';
+import { Games } from '@/lib/api/Games';
+import Loader from '@/components/Loader';
+import LeaderboardHeader from '@/components/LeaderboardHeader';
+import { compareScores } from '@/lib/util/comparescores';
+import { useSession } from '@/hooks/SessionProvider';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
-export default function GameScreen({ route, navigation }: { route: any; navigation: any }) {
-  const { id } = route.params;
-  const context = useContext(AuthContext);
-  const [errorMsg, setErrorMessage] = React.useState<string | undefined>(undefined);
-  const [leaderboard, setLeaderboard] = React.useState<any>();
-  const [refreshing, setRefreshing] = React.useState<boolean>(false);
+export default function GameScreen() {
+  const router = useRouter();
+  const params = useLocalSearchParams<{ id: string }>();
+  const { id } = params;
+  const context = useSession();
+  const [errorMsg, setErrorMessage] = useState<string | undefined>(undefined);
+  const [leaderboard, setLeaderboard] = useState<any>();
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const getGameAsync = async (id: string) => {
     console.log('getting game ', id);
@@ -45,12 +48,16 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
 
   useEffect(() => {
     // console.log('getting game ', id);
-    getGameAsync(id);
+    if (id) {
+      getGameAsync(id);
+    }
   }, []);
 
   const onRefresh = () => {
-    console.log('onRefresh');
-    getGameAsync(id);
+    console.log('onRefresh id: ', id);
+    if (id) {
+      getGameAsync(id);
+    }
   };
 
   // if we couldn't get the game info, make the user sign in again
@@ -65,10 +72,14 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
 
   const onClick = (gamer: any) => {
     console.log('clicked on ', gamer);
-    navigation.navigate('GameDetails', {
-      gamer: gamer,
-      currentRound: currentRound,
-    });
+    router.push(
+      '/games/details?gameId=' +
+        id +
+        '&gamerId=' +
+        gamer.objectId +
+        '&currentRound=' +
+        currentRound,
+    );
   };
 
   const header = () => {
@@ -104,9 +115,7 @@ export default function GameScreen({ route, navigation }: { route: any; navigati
               onRefresh={onRefresh}
               ListHeaderComponent={header}
               ListFooterComponent={footer}
-              renderItem={({ item }) => (
-                <LeaderboardItem item={item} currentRound={currentRound} onClick={onClick} />
-              )}
+              renderItem={({ item }) => <LeaderboardItem item={item} onClick={onClick} />}
               keyExtractor={(item) => {
                 // console.log(item);
                 return item.objectId;

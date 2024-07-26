@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable, Text } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
 
 export default function LinkContainer({
   style,

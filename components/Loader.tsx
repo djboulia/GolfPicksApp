@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, ActivityIndicator, View } from 'react-native';
+import { StyleSheet, ActivityIndicator, View } from 'react-native';
 
 export default function Loader({ message }: { message?: string }) {
   return (

@@ -14,9 +14,9 @@ export default function CurrentGameHeader({
   activeGame: any;
   onClick?: (eventid: string, name: string) => void;
 }) {
-  console.log('activeGame', activeGame);
+  // console.log('activeGame', activeGame);
 
-  if (!activeGame) return null;
+  if (!activeGame || !activeGame.eventid) return null;
 
   if (activeGame.inProgress) {
     return (

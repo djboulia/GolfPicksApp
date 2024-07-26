@@ -1,23 +1,26 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
-import ErrorText from './ErrorText';
-import { useCurrentGamer } from '../lib/hooks/useCurrentGamer';
-import { AuthContext } from '../lib/AuthContext';
-import { Games } from '../lib/api/Games';
-import { Events } from '../lib/api/Events';
-import Loader from './Loader';
-import GolferItem from './GolferItem';
-import PicksHeader from './PicksHeader';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, FlatList } from 'react-native';
+import ErrorText from '@/components/ErrorText';
+import { useCurrentGamer } from '@/hooks/useCurrentGamer';
+import { Games } from '@/lib/api/Games';
+import { Events } from '@/lib/api/Events';
+import Loader from '@/components/Loader';
+import GolferItem from '@/components/GolferItem';
+import PicksHeader from '@/components/PicksHeader';
+import { useSession } from '@/hooks/SessionProvider';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 const MAX_SELECTIONS = 10;
 const MAX_TOP10_SELECTIONS = 2;
 
-export default function PicksScreen({ route, navigation }: { route: any; navigation: any }) {
-  const { gameid, name } = route.params;
+export default function PicksScreen() {
+  const router = useRouter();
+  const params = useLocalSearchParams<{ gameId: string; name: string }>();
+  const { gameId, name } = params;
 
-  const context = useContext(AuthContext);
+  const context = useSession();
   const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
-  const gamer = useCurrentGamer();
+  const [gamer] = useCurrentGamer();
   const [picks, setPicks] = useState<any[]>();
   const [game, setGame] = useState<any>();
   const [event, setEvent] = useState<any>();
@@ -73,10 +76,10 @@ export default function PicksScreen({ route, navigation }: { route: any; navigat
   };
 
   useEffect(() => {
-    const getPicksAsync = async (id: string) => {
+    const getPicksAsync = async (id: string | undefined) => {
       setLoadingMessage('Loading...');
 
-      if (gamer?.getId()) {
+      if (id && gamer?.getId()) {
         const result = await Games.picks(id, gamer?.getId()).catch((error: any) => {
           if (error?.message?.includes('not found')) {
             // haven't made picks yet
@@ -113,12 +116,12 @@ export default function PicksScreen({ route, navigation }: { route: any; navigat
     };
 
     // console.log('getting game ', id);
-    getPicksAsync(gameid);
+    getPicksAsync(gameId);
   }, [gamer]);
 
   // if we couldn't get the game info, make the user sign in again
   if (errorMsg) {
-    context.signOut();
+    router.push('/error?message=' + errorMsg);
   }
 
   const golferClicked = (index: number) => {
@@ -157,7 +160,7 @@ export default function PicksScreen({ route, navigation }: { route: any; navigat
       setLoadingMessage(undefined);
 
       console.log('saved picks ', picks);
-      navigation.goBack();
+      router.back();
     }
   };
 
@@ -172,8 +175,8 @@ export default function PicksScreen({ route, navigation }: { route: any; navigat
       }
     });
 
-    if (gamer?.getId()) {
-      asyncUpdatePicks(gameid, gamer?.getId(), picks);
+    if (gameId && gamer?.getId()) {
+      asyncUpdatePicks(gameId, gamer?.getId(), picks);
     } else {
       console.log('error: no gamer id found ', gamer?.getId());
     }
@@ -184,7 +187,7 @@ export default function PicksScreen({ route, navigation }: { route: any; navigat
       <View style={styles.containerInput}>
         <PicksHeader
           gamerName={gamer?.getName() ? gamer.getName() : ''}
-          gameName={name}
+          gameName={name ?? ''}
           top10Selected={top10Selected}
           top10Max={MAX_TOP10_SELECTIONS}
           totalSelected={totalSelected}

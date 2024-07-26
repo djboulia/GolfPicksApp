@@ -5,11 +5,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function LeaderboardItem({
   item,
-  currentRound,
   onClick,
 }: {
   item: any;
-  currentRound: number;
   onClick?: (item: any) => void;
 }) {
   // console.log('item: ', item);

@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import LinkContainer from './LinkContainer';
-import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function LeaderboardHeader({ roundTitles }: { roundTitles: string[] }) {
   return (
