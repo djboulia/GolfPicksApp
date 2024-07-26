@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { ThemeProvider } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useFonts } from 'expo-font';
 import { Slot } from 'expo-router';
@@ -9,6 +9,7 @@ import 'react-native-reanimated';
 import { SessionProvider } from '@/hooks/SessionProvider';
 
 import { useColorScheme } from 'react-native';
+import { getTheme } from '@/theme/colors';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -38,7 +39,7 @@ export default function RootLayout() {
 
   return (
     <SessionProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <ThemeProvider value={getTheme(colorScheme === 'dark')}>
         <Slot />
       </ThemeProvider>
     </SessionProvider>

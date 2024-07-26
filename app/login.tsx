@@ -1,5 +1,6 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { Theme, useTheme } from '@react-navigation/native';
 import { StyleSheet, Text, View, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import LabelTextInput, { InputTypes } from '@/components/LabelTextInput';
 import Button from '@/components/Button';
@@ -17,6 +18,7 @@ export default function Login() {
   const [errorMsg, setErrorMsg] = React.useState<string | undefined>(undefined);
   const [inProgress, setInProgress] = React.useState(false);
   const router = useRouter();
+  const theme = useTheme();
 
   const { signIn } = useSession();
 
@@ -48,6 +50,8 @@ export default function Login() {
         setErrorMsg('Error logging in.');
       });
   };
+
+  const styles = createStyles(theme);
 
   return (
     <KeyboardAvoidingView
@@ -91,33 +95,35 @@ export default function Login() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  image: {
-    width: 200,
-    height: 200,
-  },
-  imageContainer: {
-    padding: 10,
-  },
-  title: {
-    fontSize: 25,
-    fontWeight: 'bold',
-  },
-  containerInput: {
-    backgroundColor: '#fff',
-    padding: 10,
-  },
-  input: {
-    width: 300,
-    height: 40,
-    padding: 8,
-    borderColor: 'gray',
-    borderWidth: 1,
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    image: {
+      width: 200,
+      height: 200,
+    },
+    imageContainer: {
+      padding: 10,
+    },
+    title: {
+      color: theme.colors.text,
+      fontSize: 25,
+      fontWeight: 'bold',
+    },
+    containerInput: {
+      backgroundColor: theme.colors.background,
+      padding: 10,
+    },
+    input: {
+      width: 300,
+      height: 40,
+      padding: 8,
+      borderColor: 'gray',
+      borderWidth: 1,
+    },
+  });

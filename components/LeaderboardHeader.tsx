@@ -1,8 +1,12 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import LinkContainer from './LinkContainer';
+import { Theme, useTheme } from '@react-navigation/native';
 
 export default function LeaderboardHeader({ roundTitles }: { roundTitles: string[] }) {
+  const theme = useTheme();
+
+  const styles = createStyles(theme);
   return (
     <View style={styles.container}>
       <LinkContainer style={styles.linkContainer}>
@@ -31,32 +35,33 @@ const baseStyle = {
   fontSize: defaultFontSize,
 };
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    paddingVertical: 12,
-    backgroundColor: '#005500',
-  },
-  linkContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-  },
-  label: {
-    ...baseStyle,
-    flex: 3,
-    paddingRight: 10,
-    color: defaultColor,
-  },
-  score: {
-    ...baseStyle,
-    fontWeight: 'bold',
-    flex: 1,
-    color: defaultColor,
-  },
-  spacer: {
-    width: 30,
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      width: '100%',
+      paddingVertical: 12,
+      backgroundColor: theme.colors.primary,
+    },
+    linkContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+      paddingVertical: 5,
+    },
+    label: {
+      ...baseStyle,
+      flex: 3,
+      paddingRight: 10,
+      color: theme.dark ? 'lightgray' : defaultColor,
+    },
+    score: {
+      ...baseStyle,
+      fontWeight: 'bold',
+      flex: 1,
+      color: theme.dark ? 'lightgray' : defaultColor,
+    },
+    spacer: {
+      width: 30,
+    },
+  });

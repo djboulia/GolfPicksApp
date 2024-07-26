@@ -2,8 +2,10 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useCurrentGamer } from '@/hooks/useCurrentGamer';
 import { useSession } from '@/hooks/SessionProvider';
+import { Theme, useTheme } from '@react-navigation/native';
 
 export default function LogoutScreen() {
+  const theme = useTheme();
   const [gamer] = useCurrentGamer();
 
   const { signOut } = useSession();
@@ -24,6 +26,7 @@ export default function LogoutScreen() {
     }
   }, [gamer]);
 
+  const styles = createStyles(theme);
   return (
     <View style={styles.container}>
       <View style={styles.containerInput}>
@@ -33,19 +36,21 @@ export default function LogoutScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  containerInput: {
-    backgroundColor: '#fff',
-    padding: 10,
-  },
-  title: {
-    fontSize: 25,
-    fontWeight: 'bold',
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    containerInput: {
+      backgroundColor: theme.colors.background,
+      padding: 10,
+    },
+    title: {
+      fontSize: 25,
+      fontWeight: 'bold',
+      color: theme.colors.text,
+    },
+  });

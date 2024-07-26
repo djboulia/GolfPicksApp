@@ -6,9 +6,13 @@ import TournamentItem from '@/components/TournamentItem';
 import Loader from '@/components/Loader';
 import CurrentGameHeader from '@/components/CurrentGameHeader';
 import { useRouter } from 'expo-router';
+import { Theme, useTheme } from '@react-navigation/native';
+import { getCustomColors } from '@/theme/colors';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const theme = useTheme();
+
   const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
   const [gamer] = useCurrentGamer();
   const [games, setGames] = useState<any>();
@@ -57,6 +61,8 @@ export default function HomeScreen() {
   // console.log('games.active ', games?.active);
   // console.log('games.history', games?.history);
 
+  const styles = createStyles(theme);
+
   return (
     <View style={styles.container}>
       <View style={styles.containerInput}>
@@ -100,33 +106,37 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-  },
-  image: {
-    width: 200,
-    height: 200,
-  },
-  imageContainer: {
-    padding: 10,
-  },
-  title: {
-    backgroundColor: '#005500',
-    color: '#fff',
-    fontSize: 25,
-    fontWeight: 'bold',
-    padding: 10,
-  },
-  containerInput: {
-    backgroundColor: '#fff',
-    paddingVertical: 10,
-  },
-  input: {
-    width: 300,
-    height: 40,
-    padding: 8,
-    borderColor: 'gray',
-    borderWidth: 1,
-  },
-});
+const createStyles = (theme: Theme) => {
+  const customColors = getCustomColors(theme.dark);
+
+  return StyleSheet.create({
+    container: {
+      backgroundColor: theme.colors.background,
+    },
+    image: {
+      width: 200,
+      height: 200,
+    },
+    imageContainer: {
+      padding: 10,
+    },
+    title: {
+      backgroundColor: theme.colors.primary,
+      color: customColors.leaderboardText,
+      fontSize: 25,
+      fontWeight: 'bold',
+      padding: 10,
+    },
+    containerInput: {
+      backgroundColor: theme.colors.background,
+      paddingVertical: 10,
+    },
+    input: {
+      width: 300,
+      height: 40,
+      padding: 8,
+      borderColor: theme.dark ? 'white' : 'gray',
+      borderWidth: 1,
+    },
+  });
+};

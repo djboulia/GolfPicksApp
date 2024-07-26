@@ -8,12 +8,15 @@ import LeaderboardHeader from '@/components/LeaderboardHeader';
 import { compareScores } from '@/lib/util/comparescores';
 import { useSession } from '@/hooks/SessionProvider';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Theme, useTheme } from '@react-navigation/native';
+import { getCustomColors } from '@/theme/colors';
 
 export default function GameScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ id: string }>();
   const { id } = params;
   const context = useSession();
+  const theme = useTheme();
   const [errorMsg, setErrorMessage] = useState<string | undefined>(undefined);
   const [leaderboard, setLeaderboard] = useState<any>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -82,6 +85,8 @@ export default function GameScreen() {
     );
   };
 
+  const styles = createStyles(theme);
+
   const header = () => {
     return (
       <>
@@ -135,43 +140,48 @@ export default function GameScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-  },
-  titleContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  title: {
-    backgroundColor: '#fff',
-    color: '#000000',
-    fontSize: 25,
-    fontWeight: 'bold',
-    padding: 20,
-    textAlign: 'center',
-  },
-  containerInput: {
-    backgroundColor: '#fff',
-    paddingVertical: 10,
-  },
-  leaderboardContainer: {
-    backgroundColor: '#005500',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    padding: 20,
-  },
-  leaderboardTitle: {
-    color: '#fff',
-    fontSize: 25,
-    fontWeight: 'bold',
-    padding: 10,
-  },
-  leaderboardRoundLeader: {
-    color: '#ff0',
-    fontSize: 20,
-    padding: 10,
-  },
-});
+const createStyles = (theme: Theme) => {
+  const customColors = getCustomColors(theme.dark);
+
+  return StyleSheet.create({
+    container: {
+      backgroundColor: theme.colors.background,
+    },
+    titleContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
+    },
+    title: {
+      backgroundColor: theme.colors.background,
+      color: theme.colors.text,
+      fontSize: 25,
+      fontWeight: 'bold',
+      padding: 20,
+      textAlign: 'center',
+    },
+    containerInput: {
+      backgroundColor: theme.colors.background,
+      paddingVertical: 10,
+    },
+    leaderboardContainer: {
+      backgroundColor: theme.colors.primary,
+      color: customColors.leaderboardText,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      padding: 20,
+    },
+    leaderboardTitle: {
+      color: customColors.leaderboardText,
+      fontSize: 25,
+      fontWeight: 'bold',
+      padding: 10,
+    },
+    leaderboardRoundLeader: {
+      color: '#ff0',
+      fontSize: 20,
+      padding: 10,
+    },
+  });
+};

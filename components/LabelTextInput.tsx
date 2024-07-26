@@ -1,3 +1,4 @@
+import { Theme, useTheme } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, View, TextInput, Text } from 'react-native';
 
@@ -21,11 +22,13 @@ export default function LabelTextInput({
   onChange: (text: string) => void;
 }) {
   const [focus, setFocus] = React.useState(false);
+  const theme = useTheme();
 
+  const styles = createStyles(theme);
   return (
     <View>
       <View style={styles.inputContainer}>
-        <Text>{label}</Text>
+        <Text style={styles.inputLabel}>{label}</Text>
       </View>
       <View style={styles.inputContainer}>
         <TextInput
@@ -44,26 +47,31 @@ export default function LabelTextInput({
   );
 }
 
-const styles = StyleSheet.create({
-  inputContainer: {
-    padding: 2,
-  },
-  input: {
-    width: 300,
-    height: 40,
-    padding: 8,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    backgroundColor: '#eaf0ea',
-  },
-  inputFocused: {
-    width: 300,
-    height: 40,
-    padding: 8,
-    borderColor: '#80aa80',
-    borderWidth: 2,
-    borderRadius: 5,
-    backgroundColor: '#eaf0ea',
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    inputContainer: {
+      color: theme.colors.text,
+      padding: 2,
+    },
+    inputLabel: {
+      color: theme.colors.text,
+    },
+    input: {
+      width: 300,
+      height: 40,
+      padding: 8,
+      borderColor: 'gray',
+      borderWidth: 1,
+      borderRadius: 5,
+      backgroundColor: '#eaf0ea',
+    },
+    inputFocused: {
+      width: 300,
+      height: 40,
+      padding: 8,
+      borderColor: '#80aa80',
+      borderWidth: 2,
+      borderRadius: 5,
+      backgroundColor: '#eaf0ea',
+    },
+  });

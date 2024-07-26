@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import LinkContainer from './LinkContainer';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { Theme, useTheme } from '@react-navigation/native';
+import { getCustomColors } from '@/theme/colors';
 
 export default function LeaderboardItem({
   item,
@@ -10,11 +12,13 @@ export default function LeaderboardItem({
   item: any;
   onClick?: (item: any) => void;
 }) {
+  const theme = useTheme();
   // console.log('item: ', item);
   // console.log('currentRound: ', item?.rounds, currentRound);
 
   const scores = [{ score: 0, styles: {} }];
 
+  const styles = createStyles(theme);
   return (
     <View style={styles.container}>
       <LinkContainer
@@ -43,7 +47,7 @@ export default function LeaderboardItem({
           );
         })}
 
-        <Ionicons name="chevron-forward" size={30} color="#fff" />
+        <Ionicons name="chevron-forward" size={30} color={styles.linkLabel.color} />
       </LinkContainer>
     </View>
   );
@@ -61,33 +65,37 @@ const linkScoreBase = {
   fontSize: defaultFontSize,
 };
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    borderTopWidth: 1,
-    borderTopColor: '#BBBBBB',
-    paddingVertical: 12,
-    backgroundColor: '#005500',
-  },
-  linkContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-  },
-  linkLabel: {
-    ...linkLabelBase,
-    flex: 3,
-    paddingRight: 10,
-    color: defaultColor,
-  },
-  linkScore: {
-    ...linkScoreBase,
-    flex: 1,
-    color: defaultColor,
-  },
-  linkLeaderScore: {
-    color: leaderColor,
-  },
-});
+const createStyles = (theme: Theme) => {
+  const customColors = getCustomColors(theme.dark);
+
+  return StyleSheet.create({
+    container: {
+      width: '100%',
+      borderTopWidth: 1,
+      borderTopColor: customColors.leaderboardText,
+      paddingVertical: 12,
+      backgroundColor: theme.colors.primary,
+    },
+    linkContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+      paddingVertical: 5,
+    },
+    linkLabel: {
+      ...linkLabelBase,
+      flex: 3,
+      paddingRight: 10,
+      color: customColors.leaderboardText,
+    },
+    linkScore: {
+      ...linkScoreBase,
+      flex: 1,
+      color: customColors.leaderboardText,
+    },
+    linkLeaderScore: {
+      color: leaderColor,
+    },
+  });
+};

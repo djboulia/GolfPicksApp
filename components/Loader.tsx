@@ -1,16 +1,23 @@
+import { Theme, useTheme } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, ActivityIndicator, View } from 'react-native';
 
-export default function Loader({ message }: { message?: string }) {
+export default function Loader() {
+  const theme = useTheme();
+
+  const styles = createStyles(theme);
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="#005500" />
+      <ActivityIndicator size="large" color={styles.container.color} />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      color: theme.colors.primary,
+      backgroundColor: theme.colors.background,
+      height: '100%',
+    },
+  });
