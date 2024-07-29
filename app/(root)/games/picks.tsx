@@ -196,7 +196,7 @@ export default function PicksScreen() {
           onClick={updatePicks}
         />
 
-        {loadingMessage && <Loader message={loadingMessage} />}
+        {loadingMessage && <Loader />}
 
         {golfers ? (
           <FlatList
