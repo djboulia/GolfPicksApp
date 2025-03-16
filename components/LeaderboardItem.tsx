@@ -54,7 +54,6 @@ export default function LeaderboardItem({
 }
 
 const defaultFontSize = 18;
-const defaultColor = '#fff';
 const leaderColor = '#ff0';
 
 const linkLabelBase = {
@@ -80,8 +79,10 @@ const createStyles = (theme: Theme) => {
       flex: 1,
       flexDirection: 'row',
       justifyContent: 'space-between',
+      gap: 10,
       paddingHorizontal: 20,
       paddingVertical: 5,
+      alignItems: 'center',
     },
     linkLabel: {
       ...linkLabelBase,
@@ -92,6 +93,7 @@ const createStyles = (theme: Theme) => {
     linkScore: {
       ...linkScoreBase,
       flex: 1,
+      textAlign: 'right',
       color: customColors.leaderboardText,
     },
     linkLeaderScore: {

@@ -46,6 +46,8 @@ const createStyles = (theme: Theme) =>
       flex: 1,
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: 10,
       paddingHorizontal: 20,
       paddingVertical: 5,
     },
@@ -59,6 +61,7 @@ const createStyles = (theme: Theme) =>
       ...baseStyle,
       fontWeight: 'bold',
       flex: 1,
+      textAlign: 'right',
       color: theme.dark ? 'lightgray' : defaultColor,
     },
     spacer: {
