@@ -2,16 +2,17 @@
   "expo": {
     "name": "GolfPicksApp",
     "slug": "GolfPicksApp",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
+    "scheme": "com.djboulia.GolfPicksApp",
     "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "scheme": "com.djboulia.GolfPicksApp",
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "config": {
@@ -27,6 +28,8 @@
       }
     },
     "web": {
+      "bundler": "metro",
+      "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
     "extra": {
