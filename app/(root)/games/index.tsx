@@ -43,12 +43,6 @@ export default function HomeScreen() {
     getGamesAsync();
   };
 
-  // if we couldn't get the game info, make the user sign in again
-  if (errorMsg) {
-    console.log('could not load games due to error: ', errorMsg);
-    router.push('/error?message=' + errorMsg);
-  }
-
   const onClick = (id: string) => {
     router.push('/games/game?id=' + id);
   };
@@ -57,6 +51,12 @@ export default function HomeScreen() {
     console.log('updatePicks ', gameid, name);
     router.push('/games/picks?gameId=' + gameid + '&name=' + name);
   };
+
+  // if we couldn't get the game info, make the user sign in again
+  if (errorMsg) {
+    console.log('could not load games due to error: ', errorMsg);
+    return router.push('/error?message=' + errorMsg);
+  }
 
   // console.log('games.active ', games?.active);
   // console.log('games.history', games?.history);

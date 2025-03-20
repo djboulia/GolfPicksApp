@@ -119,11 +119,6 @@ export default function PicksScreen() {
     getPicksAsync(gameId);
   }, [gamer]);
 
-  // if we couldn't get the game info, make the user sign in again
-  if (errorMsg) {
-    router.push('/error?message=' + errorMsg);
-  }
-
   const golferClicked = (index: number) => {
     const golfer = golfers.find((golfer) => golfer.index === index);
     console.log('golferClicked ', golfer);
@@ -181,6 +176,11 @@ export default function PicksScreen() {
       console.log('error: no gamer id found ', gamer?.getId());
     }
   };
+
+  // if we couldn't get the game info, make the user sign in again
+  if (errorMsg) {
+    return router.push('/error?message=' + errorMsg);
+  }
 
   return (
     <View style={styles.container}>
