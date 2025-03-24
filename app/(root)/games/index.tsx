@@ -5,7 +5,7 @@ import { useCurrentGamer } from '@/hooks/useCurrentGamer';
 import TournamentItem from '@/components/TournamentItem';
 import Loader from '@/components/Loader';
 import CurrentGameHeader from '@/components/CurrentGameHeader';
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { Theme, useTheme } from '@react-navigation/native';
 import { getCustomColors } from '@/theme/colors';
 
@@ -44,18 +44,18 @@ export default function HomeScreen() {
   };
 
   const onClick = (id: string) => {
-    router.push('/games/game?id=' + id);
+    router.push(`/games/game?id=${id}`);
   };
 
   const updatePicks = (gameid: string, name: string) => {
     console.log('updatePicks ', gameid, name);
-    router.push('/games/picks?gameId=' + gameid + '&name=' + name);
+    router.push(`/games/picks?gameId=${gameid}'&name=${name}`);
   };
 
   // if we couldn't get the game info, make the user sign in again
   if (errorMsg) {
     console.log('could not load games due to error: ', errorMsg);
-    return router.push('/error?message=' + errorMsg);
+    return <Redirect href={`/error?message=${errorMsg}`} />;
   }
 
   // console.log('games.active ', games?.active);

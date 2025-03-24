@@ -8,7 +8,7 @@ import Loader from '@/components/Loader';
 import GolferItem from '@/components/GolferItem';
 import PicksHeader from '@/components/PicksHeader';
 import { useSession } from '@/hooks/SessionProvider';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
 
 const MAX_SELECTIONS = 10;
 const MAX_TOP10_SELECTIONS = 2;
@@ -179,7 +179,7 @@ export default function PicksScreen() {
 
   // if we couldn't get the game info, make the user sign in again
   if (errorMsg) {
-    return router.push('/error?message=' + errorMsg);
+    return <Redirect href={`/error?message=${errorMsg}`} />;
   }
 
   return (

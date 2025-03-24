@@ -76,12 +76,7 @@ export default function GameScreen() {
   const onClick = (gamer: any) => {
     console.log('clicked on ', gamer);
     router.push(
-      '/games/details?gameId=' +
-        id +
-        '&gamerId=' +
-        gamer.objectId +
-        '&currentRound=' +
-        currentRound,
+      `/games/details?gameId=${id}&gamerId=${gamer.objectId}&currentRound=${currentRound}`,
     );
   };
 
