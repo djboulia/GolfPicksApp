@@ -1,33 +1,45 @@
+import { getCustomColors } from '@/theme/colors';
+import { Theme, useTheme } from '@react-navigation/native';
 import { Link, Stack, useLocalSearchParams } from 'expo-router';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Button } from 'react-native';
 
 export default function ErrorScreen() {
   const params = useLocalSearchParams();
   const { message } = params;
+  const theme = useTheme();
+  const styles = createStyles(theme);
 
   return (
     <>
       <Stack.Screen options={{ title: 'Error!' }} />
       <View style={styles.container}>
-        <Text>There was an error</Text>
-        <Text>{message}</Text>
-        <Link href="/logout" style={styles.link}>
-          <Text>Log out</Text>
+        <Text style={styles.text}>There was an error</Text>
+        <Text style={styles.text}>{message}</Text>
+        <Link href="/logout" style={styles.link} asChild>
+          <Button title="Log out" />
         </Link>
       </View>
     </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-});
+const createStyles = (theme: Theme) => {
+  const customColors = getCustomColors(theme.dark);
+
+  return StyleSheet.create({
+    container: {
+      backgroundColor: theme.colors.background,
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 20,
+    },
+    text: {
+      color: theme.colors.text,
+    },
+    link: {
+      marginTop: 15,
+      paddingVertical: 15,
+    },
+  });
+};

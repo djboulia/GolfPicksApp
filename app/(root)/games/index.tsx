@@ -54,7 +54,7 @@ export default function HomeScreen() {
 
   // if we couldn't get the game info, make the user sign in again
   if (errorMsg) {
-    console.log('could not load games due to error: ', errorMsg);
+    console.log('could not load games due to error: ', errorMsg, ', redirecting');
     return <Redirect href={`/error?message=${errorMsg}`} />;
   }
 
