@@ -6,9 +6,9 @@ import LabelTextInput, { InputTypes } from '@/components/LabelTextInput';
 import Button from '@/components/Button';
 import ErrorText from '@/components/ErrorText';
 
-import { Gamer } from '../lib/api/Gamer';
 import { useSession } from '@/hooks/SessionProvider';
 import { useRouter } from 'expo-router';
+import { GamerApi } from '@/lib/api/GamerApi';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const GolfPicksLogo = require('../assets/images/golfpicks.png');
@@ -23,33 +23,30 @@ export default function Login() {
 
   const { signIn } = useSession();
 
-  const onLogin = () => {
+  const onLogin = async () => {
     if (inProgress) {
       console.log('login in already progress');
       return;
     }
     console.log(`calling Login with ${email} and ${password}`);
     setInProgress(true);
-    Gamer.login(email, password)
-      .then((gamer): any => {
-        setInProgress(false);
+    const gamer = await GamerApi.login(email, password).catch((error) => {
+      setInProgress(false);
 
-        if (gamer) {
-          console.log('login: ', gamer);
-          setErrorMsg(undefined);
-          signIn();
-          router.push('/games');
-        } else {
-          console.log('gamer is undefined');
-          setErrorMsg('Error logging in.');
-        }
-      })
-      .catch((error): any => {
-        setInProgress(false);
+      console.log('login error: ', error);
+      setErrorMsg('Error logging in.');
+    });
+    setInProgress(false);
 
-        console.log('login error: ', error);
-        setErrorMsg('Error logging in.');
-      });
+    if (gamer) {
+      console.log('login: ', gamer);
+      setErrorMsg(undefined);
+      signIn();
+      router.push('/games');
+    } else {
+      console.log('gamer is undefined');
+      setErrorMsg('Error logging in.');
+    }
   };
 
   const styles = createStyles(theme);

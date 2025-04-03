@@ -4,13 +4,15 @@ import LinkContainer from './LinkContainer';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { type Theme, useTheme } from '@react-navigation/native';
 import { getCustomColors } from '@/theme/colors';
+import { type GamerScore } from '@/lib/models/GamerScore';
+import { type Round } from '@/lib/models/Round';
 
 export default function LeaderboardItem({
   item,
   onClick,
 }: {
-  item: any;
-  onClick?: (item: any) => void;
+  item: GamerScore;
+  onClick?: (item: GamerScore) => void;
 }) {
   const theme = useTheme();
   // console.log('item: ', item);
@@ -32,7 +34,7 @@ export default function LeaderboardItem({
           {item?.name}
         </Text>
 
-        {item?.rounds.map((round: any, index: number) => {
+        {item?.rounds.map((round: Round, index: number) => {
           return (
             <Text
               key={index}

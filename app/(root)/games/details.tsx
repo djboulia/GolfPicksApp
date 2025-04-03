@@ -7,6 +7,8 @@ import { useLeaderboard } from '@/hooks/useLeaderboard';
 import Loader from '@/components/Loader';
 import { type Theme, useTheme } from '@react-navigation/native';
 import { getCustomColors } from '@/theme/colors';
+import { type GamerScore } from '@/lib/models/GamerScore';
+import { type GamerPick } from '@/lib/models/GamerPick';
 
 export default function DetailsScreen() {
   const params = useLocalSearchParams<{ gameId: string; gamerId: string; currentRound: string }>();
@@ -14,7 +16,7 @@ export default function DetailsScreen() {
   const { gameId, gamerId, currentRound } = params;
   const [errorMsg] = useState<string | undefined>(undefined);
   const { leaderboard, loaded } = useLeaderboard(gameId ?? '');
-  const [gamer, setGamer] = useState<any>(undefined);
+  const [gamer, setGamer] = useState<GamerScore | undefined>(undefined);
 
   const rounds = [1, 2, 3, 4];
 
@@ -25,12 +27,12 @@ export default function DetailsScreen() {
 
       // find the gamer in the leaderboard
       const gamers = leaderboard.gamers;
-      const gamer = gamers.find((g: any) => g.objectId === gamerId);
+      const gamer = gamers.find((g: GamerScore) => g.objectId === gamerId);
       console.log('gamerId', gamerId, 'found gamer', gamer);
 
       // sort the leaders by lowest score in current round
       // if there are ties, sort by previous rounds
-      gamer?.picks?.sort((a: any, b: any) => {
+      gamer?.picks?.sort((a: GamerPick, b: GamerPick) => {
         for (let i = Number(currentRound); i >= 0; i--) {
           const result = compareScores(a.rounds[i], b.rounds[i]);
 
@@ -55,7 +57,7 @@ export default function DetailsScreen() {
             {' '}
           </Text>
 
-          {rounds.map((round: any) => {
+          {rounds.map((round: number) => {
             return (
               <Text key={round} style={styles.headerScore}>
                 {round}
@@ -74,10 +76,10 @@ export default function DetailsScreen() {
           <Text key={'total'} style={styles.totals}>
             Total
           </Text>
-          {rounds.map((round: any, index: number) => {
+          {rounds.map((round: number, index: number) => {
             return (
               <Text key={round} style={styles.totalsScore}>
-                {gamer.totals[index]}
+                {gamer?.totals[index]}
               </Text>
             );
           })}
@@ -86,10 +88,10 @@ export default function DetailsScreen() {
           <Text key={'top5'} style={styles.top5}>
             Top Five
           </Text>
-          {rounds.map((round: any, index: number) => {
+          {rounds.map((round: number, index: number) => {
             return (
               <Text key={round} style={styles.top5Score}>
-                {gamer.scores[index]}
+                {gamer?.scores[index]}
               </Text>
             );
           })}
@@ -111,7 +113,7 @@ export default function DetailsScreen() {
                 <Text key={'name'} style={styles.player} numberOfLines={1}>
                   {item.name}
                 </Text>
-                {rounds.map((round: any, index: number) => {
+                {rounds.map((round: number, index: number) => {
                   return (
                     <Text key={round} style={styles.playerScore}>
                       {item.rounds[index]}

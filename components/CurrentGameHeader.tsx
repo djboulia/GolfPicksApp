@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Button from './Button';
+import { type ActiveGame } from '@/lib/models/ActiveGame';
 
 /**
  *
@@ -11,7 +12,7 @@ export default function CurrentGameHeader({
   activeGame,
   onClick,
 }: {
-  activeGame: any;
+  activeGame: ActiveGame | undefined;
   onClick?: (eventid: string, name: string) => void;
 }) {
   // console.log('activeGame', activeGame);

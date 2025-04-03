@@ -10,7 +10,7 @@ const formatScore = (score: string) => {
   return Number.parseInt(score);
 };
 
-export const compareScores = (scoreA: any, scoreB: any) => {
+export const compareScores = (scoreA: string, scoreB: string) => {
   const roundA = formatScore(scoreA);
   const roundB = formatScore(scoreB);
 

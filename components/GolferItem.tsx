@@ -12,7 +12,7 @@ export default function GolferItem({
   onClick,
 }: {
   name: string;
-  rank: string;
+  rank: number;
   index: number;
   enabled?: boolean;
   selected?: boolean;

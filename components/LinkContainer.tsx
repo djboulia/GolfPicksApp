@@ -1,13 +1,14 @@
-import { StyleSheet, View, Pressable } from 'react-native';
+import React from 'react';
+import { StyleSheet, View, Pressable, type StyleProp } from 'react-native';
 
 export default function LinkContainer({
   style,
   onPress,
   children,
 }: {
-  style?: any;
+  style?: StyleProp<any>;
   onPress?: () => void;
-  children: any;
+  children: React.ReactNode;
 }) {
   const containerStyle = style ?? styles.link;
 

@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, FlatList } from 'react-native';
 import ErrorText from '@/components/ErrorText';
 import { useCurrentGamer } from '@/hooks/useCurrentGamer';
-import { Games } from '@/lib/api/Games';
-import { Events } from '@/lib/api/Events';
+import { GamesApi } from '@/lib/api/GamesApi';
+import { EventApi } from '@/lib/api/EventApi';
 import Loader from '@/components/Loader';
 import GolferItem from '@/components/GolferItem';
 import PicksHeader from '@/components/PicksHeader';
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
+import { type Golfer } from '@/lib/models/Golfer';
+import { type GamerPick } from '@/lib/models/GamerPick';
+import { type Game } from '@/lib/models/Game';
+import { type Event } from '@/lib/models/Event';
 
 const MAX_SELECTIONS = 10;
 const MAX_TOP10_SELECTIONS = 2;
@@ -19,10 +23,10 @@ export default function PicksScreen() {
 
   const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
   const [gamer] = useCurrentGamer();
-  const [, setPicks] = useState<any[]>();
-  const [, setGame] = useState<any>();
-  const [, setEvent] = useState<any>();
-  const [golfers, setGolfers] = useState<any[]>([]);
+  const [, setPicks] = useState<GamerPick[]>();
+  const [, setGame] = useState<Game>();
+  const [, setEvent] = useState<Event>();
+  const [golfers, setGolfers] = useState<Golfer[]>([]);
   const [totalSelected, setTotalSelected] = useState<number>(0);
   const [top10Selected, setTop10Selected] = useState<number>(0);
   const [loadingMessage, setLoadingMessage] = useState<string | undefined>(undefined);
@@ -31,7 +35,7 @@ export default function PicksScreen() {
     return totalSelected === MAX_SELECTIONS;
   };
 
-  const isEnabled = (golfer: any) => {
+  const isEnabled = (golfer: Golfer) => {
     if (totalSelected >= MAX_SELECTIONS) {
       return false;
     }
@@ -43,16 +47,16 @@ export default function PicksScreen() {
     return true;
   };
 
-  const isSelected = (golfer: any, picks: any) => {
+  const isSelected = (golfer: Golfer, picks: GamerPick[]) => {
     return (
-      picks.find((pick: any) => {
+      picks.find((pick) => {
         return pick.id === golfer.player_id;
       }) !== undefined
     );
   };
 
   useEffect(() => {
-    const initSelections = (golfers: any[], picks: any[]) => {
+    const initSelections = (golfers: Golfer[] | undefined, picks: GamerPick[] | undefined) => {
       let totalSelected = 0;
       let top10Selected = 0;
 
@@ -71,14 +75,14 @@ export default function PicksScreen() {
 
       setTotalSelected(totalSelected);
       setTop10Selected(top10Selected);
-      setGolfers(golfers || []);
+      setGolfers(golfers ?? []);
     };
 
     const getPicksAsync = async (id: string | undefined) => {
       setLoadingMessage('Loading...');
 
-      if (id && gamer?.getId()) {
-        const result = await Games.picks(id, gamer?.getId()).catch((error: any) => {
+      if (id && gamer?.id) {
+        const picks = await GamesApi.picks(id, gamer?.id).catch((error) => {
           if (error?.message?.includes('not found')) {
             // haven't made picks yet
             return undefined;
@@ -88,25 +92,28 @@ export default function PicksScreen() {
         });
         // console.log('result ', result);
 
-        const picks = result?.picks ?? [];
         setPicks(picks);
 
-        const game = await Games.gameDay(id).catch((error: any) => {
+        const game = await GamesApi.gameDay(id).catch((error) => {
           console.log('error getting game: ', error);
           setErrorMsg(error.message);
+          return undefined;
         });
 
         setGame(game);
 
-        const eventid = game.event;
-        const event = await Events.get(eventid).catch((error: any) => {
-          console.log('error getting event: ', error);
-          setErrorMsg(error.message);
-        });
+        if (game?.event) {
+          const eventid = game.event;
+          const event = await EventApi.get(eventid).catch((error) => {
+            console.log('error getting event: ', error);
+            setErrorMsg(error.message);
+            return undefined;
+          });
 
-        setEvent(event);
+          setEvent(event);
+          initSelections(event?.golfers, picks);
+        }
 
-        initSelections(event?.golfers, picks);
         setLoadingMessage(undefined);
       } else {
         console.log('No gamer found');
@@ -139,10 +146,10 @@ export default function PicksScreen() {
     }
   };
 
-  const asyncUpdatePicks = async (gameid: string, gamerid: string, picks: any[]) => {
+  const asyncUpdatePicks = async (gameid: string, gamerid: string, picks: GamerPick[]) => {
     setLoadingMessage('Saving picks...');
 
-    const result = await Games.updatePicks(gameid, gamerid, picks).catch((error: any) => {
+    const result = await GamesApi.updatePicks(gameid, gamerid, picks).catch((error) => {
       console.log('error updating picks: ', error);
       setLoadingMessage(undefined);
       setErrorMsg(error.message);
@@ -160,18 +167,18 @@ export default function PicksScreen() {
   const updatePicks = () => {
     console.log('updatePicks ');
 
-    const picks: any[] = [];
+    const picks: GamerPick[] = [];
 
     golfers.forEach((golfer) => {
       if (golfer.selected) {
-        picks.push({ id: golfer.player_id });
+        picks.push({ id: golfer.player_id, name: golfer.name, rounds: [] });
       }
     });
 
-    if (gameId && gamer?.getId()) {
-      void asyncUpdatePicks(gameId, gamer?.getId(), picks);
+    if (gameId && gamer?.id) {
+      void asyncUpdatePicks(gameId, gamer?.id, picks);
     } else {
-      console.log('error: no gamer id found ', gamer?.getId());
+      console.log('error: no gamer id found ', gamer?.id);
     }
   };
 
@@ -184,7 +191,7 @@ export default function PicksScreen() {
     <View style={styles.container}>
       <View style={styles.containerInput}>
         <PicksHeader
-          gamerName={gamer?.getName() ? gamer.getName() : ''}
+          gamerName={gamer?.name ?? ''}
           gameName={name ?? ''}
           top10Selected={top10Selected}
           top10Max={MAX_TOP10_SELECTIONS}
@@ -210,7 +217,7 @@ export default function PicksScreen() {
               />
             )}
             keyExtractor={(item) => {
-              return item.index;
+              return item.index.toString();
             }}
           />
         ) : (

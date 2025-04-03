@@ -1,3 +1,6 @@
+import { type Game } from '../models/Game';
+import { type GamerPick } from '../models/GamerPick';
+import { type Leaderboard } from '../models/Leaderboard';
 import { ApiFetch } from '../util/apifetch';
 import { getBaseUrl } from '../util/url';
 
@@ -5,8 +8,8 @@ const getUrl = () => {
   return getBaseUrl() + `/Games`;
 };
 
-export class Games {
-  static async leaderboard(id: string) {
+export class GamesApi {
+  static async leaderboard(id: string): Promise<Leaderboard | undefined> {
     const baseUrl = getUrl();
     const url = baseUrl + `/${id}/leaderboard`;
 
@@ -16,7 +19,7 @@ export class Games {
     return json;
   }
 
-  static async gameDay(gameid: string) {
+  static async gameDay(gameid: string): Promise<Game | undefined> {
     const baseUrl = getUrl();
     const url = baseUrl + `/${gameid}/gameDay`;
 
@@ -28,7 +31,7 @@ export class Games {
     return json;
   }
 
-  static async picks(id: string, gamerId: string) {
+  static async picks(id: string, gamerId: string): Promise<GamerPick[]> {
     const baseUrl = getUrl();
     const url = baseUrl + `/${id}/Gamers/${gamerId}/picks`;
 
@@ -37,10 +40,10 @@ export class Games {
     const json = await ApiFetch.get(url);
 
     // console.log('games: ', JSON.stringify(json));
-    return json;
+    return json?.picks;
   }
 
-  static async updatePicks(id: string, gamerId: string, picks: any[]) {
+  static async updatePicks(id: string, gamerId: string, picks: GamerPick[]): Promise<GamerPick[]> {
     const baseUrl = getUrl();
     const url = baseUrl + `/${id}/Gamers/${gamerId}/picks`;
 

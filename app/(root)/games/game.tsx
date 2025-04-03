@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import ErrorText from '@/components/ErrorText';
 import LeaderboardItem from '@/components/LeaderboardItem';
-import { Games } from '@/lib/api/Games';
+import { GamesApi } from '@/lib/api/GamesApi';
 import Loader from '@/components/Loader';
 import LeaderboardHeader from '@/components/LeaderboardHeader';
 import { compareScores } from '@/lib/util/comparescores';
@@ -10,6 +10,8 @@ import { useSession } from '@/hooks/SessionProvider';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { type Theme, useTheme } from '@react-navigation/native';
 import { getCustomColors } from '@/theme/colors';
+import { type GamerScore } from '@/lib/models/GamerScore';
+import { type Leaderboard } from '@/lib/models/Leaderboard';
 
 export default function GameScreen() {
   const router = useRouter();
@@ -18,7 +20,7 @@ export default function GameScreen() {
   const context = useSession();
   const theme = useTheme();
   const [errorMsg, setErrorMessage] = useState<string | undefined>(undefined);
-  const [leaderboard, setLeaderboard] = useState<any>();
+  const [leaderboard, setLeaderboard] = useState<Leaderboard | undefined>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const getGameAsync = async (id: string) => {
@@ -26,16 +28,19 @@ export default function GameScreen() {
 
     setRefreshing(true);
 
-    const leaderboard = await Games.leaderboard(id).catch((error) => {
+    const leaderboard = await GamesApi.leaderboard(id).catch((error) => {
       console.log('error getting game: ', error);
       setErrorMessage(error.message);
+      return undefined;
     });
 
     // sort the leaders by lowest score in current round
     // if there are ties, sort by previous rounds
     const currentRound = leaderboard?.roundInfo?.currentRound;
     const gamers = leaderboard?.gamers;
-    gamers?.sort((a: any, b: any) => {
+    gamers?.sort((a: GamerScore, b: GamerScore) => {
+      if (!currentRound) return 0;
+
       for (let i = currentRound; i >= 0; i--) {
         const result = compareScores(a.rounds[i]?.score, b.rounds[i]?.score);
         if (result !== 0) return result;
@@ -45,7 +50,7 @@ export default function GameScreen() {
 
     // console.log('sorted gamers ', gamers);
 
-    setLeaderboard(leaderboard ?? []);
+    setLeaderboard(leaderboard);
     setRefreshing(false);
   };
 
@@ -73,7 +78,7 @@ export default function GameScreen() {
 
   const gamers = leaderboard?.gamers;
 
-  const onClick = (gamer: any) => {
+  const onClick = (gamer: GamerScore) => {
     console.log('clicked on ', gamer);
     router.push(
       `/games/details?gameId=${id}&gamerId=${gamer.objectId}&currentRound=${currentRound}`,

@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable, Text } from 'react-native';
+import { StyleSheet, View, Pressable, Text, type StyleProp } from 'react-native';
 
 export default function Link({
   label,
@@ -6,7 +6,7 @@ export default function Link({
   onPress,
 }: {
   label: string;
-  style?: any;
+  style?: StyleProp<Text>;
   onPress: () => void;
 }) {
   const textStyle = style ?? styles.linkLabel;

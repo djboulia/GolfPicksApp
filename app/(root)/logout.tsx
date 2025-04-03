@@ -3,28 +3,37 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useCurrentGamer } from '@/hooks/useCurrentGamer';
 import { useSession } from '@/hooks/SessionProvider';
 import { type Theme, useTheme } from '@react-navigation/native';
+import { GamerApi } from '@/lib/api/GamerApi';
+import { Redirect } from 'expo-router';
 
 export default function LogoutScreen() {
   const theme = useTheme();
   const [gamer] = useCurrentGamer();
+  const [signedOut, setSignedOut] = React.useState(false);
 
   const { signOut } = useSession();
 
   useEffect(() => {
     async function logout() {
-      console.log('logging out gamer ', gamer?.getName());
+      console.log('logging out gamer ', gamer?.name);
       try {
-        await gamer?.logout();
+        await GamerApi.logout();
         signOut();
       } catch (error) {
         console.log('logout error: ', error);
       }
+
+      setSignedOut(true);
     }
 
     if (gamer) {
       void logout();
     }
   }, [gamer, signOut]);
+
+  if (signedOut) {
+    return <Redirect href="/login" />;
+  }
 
   const styles = createStyles(theme);
   return (

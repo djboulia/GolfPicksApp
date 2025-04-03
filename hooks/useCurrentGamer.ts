@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Gamer } from '@/lib/api/Gamer';
+import { GamerApi } from '@/lib/api/GamerApi';
+import { type Gamer } from '@/lib/models/Gamer';
 
 export function useCurrentGamer(): [Gamer | undefined, boolean] {
   const [gamer, setGamer] = useState<Gamer | undefined>(undefined);
@@ -7,7 +8,8 @@ export function useCurrentGamer(): [Gamer | undefined, boolean] {
 
   useEffect(() => {
     const getGamer = async () => {
-      const gamer = await Gamer.getCurrentGamer();
+      const gamer = await GamerApi.getCurrentGamer();
+      console.log('getCurrentGamer: ', gamer);
       setGamer(gamer);
       setLoaded(true);
     };

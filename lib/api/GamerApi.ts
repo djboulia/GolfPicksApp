@@ -2,6 +2,8 @@ import { Platform } from 'react-native';
 import { Storage } from '../Storage';
 import { getBaseUrl } from '../util/url';
 import { ApiFetch } from '../util/apifetch';
+import { type Gamer } from '../models/Gamer';
+import { type Games } from '../models/Games';
 
 const getUrl = () => {
   return getBaseUrl() + `/Gamers`;
@@ -9,22 +11,8 @@ const getUrl = () => {
 
 const GAMER_KEY = 'gamer';
 
-type GamerObject = {
-  id: string;
-  name: string;
-  admin: boolean;
-  username: string;
-  password: string;
-};
-
-export class Gamer {
-  gamerObject: GamerObject;
-
-  constructor(gamerObject: GamerObject) {
-    this.gamerObject = gamerObject;
-  }
-
-  static async login(username: string, password: string) {
+export class GamerApi {
+  static async login(username: string, password: string): Promise<Gamer | undefined> {
     const baseUrl = getUrl();
     const url = baseUrl + '/login';
 
@@ -48,32 +36,22 @@ export class Gamer {
   static async getCurrentGamer(): Promise<Gamer | undefined> {
     const gamer = await Storage.getItem(GAMER_KEY);
     if (gamer) {
-      const gamerObject = JSON.parse(gamer);
-      return new Gamer(gamerObject);
+      const gamerObject = JSON.parse(gamer) as Gamer;
+      return gamerObject;
     }
     return undefined;
   }
 
-  public getName(): string {
-    return this.gamerObject.name;
-  }
-
-  public getId(): string {
-    console.log('gamerObject', this.gamerObject);
-    return this.gamerObject.id;
-  }
-
-  public async logout() {
+  static async logout(): Promise<boolean> {
     await Storage.removeItem(GAMER_KEY);
     return true;
   }
 
-  public async games() {
+  static async games(gamer: Gamer): Promise<Games | undefined> {
     const baseUrl = getUrl();
-    const url = baseUrl + `/${this.gamerObject.id}/Games`;
+    const url = baseUrl + `/${gamer.id}/Games`;
 
     const json = await ApiFetch.get(url);
-
     return json;
   }
 }

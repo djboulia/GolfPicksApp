@@ -9,6 +9,9 @@ import { useRouter } from 'expo-router';
 import { type Theme, useTheme } from '@react-navigation/native';
 import { getCustomColors } from '@/theme/colors';
 import { ErrorRedirect } from '@/components/ErrorRedirect';
+import { GamerApi } from '@/lib/api/GamerApi';
+import { type Gamer } from '@/lib/models/Gamer';
+import { type Games } from '@/lib/models/Games';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -16,34 +19,44 @@ export default function HomeScreen() {
 
   const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
   const [gamer] = useCurrentGamer();
-  const [games, setGames] = useState<any>();
+  const [games, setGames] = useState<Games | undefined>();
   const [refreshing, setRefreshing] = React.useState<boolean>(false);
 
-  const getGamesAsync = async () => {
+  const getGamesAsync = async (gamer: Gamer) => {
     setRefreshing(true);
 
-    console.log('getting games for gamer ', gamer?.getName());
-    const games = await gamer?.games().catch((error: any) => {
-      console.log(`error getting games: ${error.message}`);
+    if (gamer) {
+      console.log('getting games for gamer ', gamer.name);
+      const games = await GamerApi.games(gamer).catch((error) => {
+        console.log(`error getting games: ${error.message}`);
 
-      setErrorMsg(error.message);
-    });
+        setErrorMsg(error.message);
+        return undefined;
+      });
 
-    // console.log('games ', games);
-    setGames(games ?? []);
+      // console.log('games ', games);
+      setGames(games);
+    } else {
+      console.log('gamer is undefined');
+    }
+
     setRefreshing(false);
   };
 
   useEffect(() => {
     if (gamer) {
-      void getGamesAsync();
+      void getGamesAsync(gamer);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gamer]);
 
   const onRefresh = () => {
     console.log('onRefresh HomeScreen');
-    void getGamesAsync();
+    if (!gamer) {
+      console.log('gamer is undefined');
+      return;
+    }
+
+    void getGamesAsync(gamer);
   };
 
   const onClick = (id: string) => {
@@ -68,7 +81,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.containerInput}>
-        <Text style={styles.title}>Games for {gamer?.getName()}</Text>
+        <Text style={styles.title}>Games for {gamer?.name}</Text>
 
         <CurrentGameHeader activeGame={games?.active} onClick={updatePicks} />
 
