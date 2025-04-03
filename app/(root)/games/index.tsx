@@ -8,6 +8,7 @@ import CurrentGameHeader from '@/components/CurrentGameHeader';
 import { Redirect, useRouter } from 'expo-router';
 import { Theme, useTheme } from '@react-navigation/native';
 import { getCustomColors } from '@/theme/colors';
+import { ErrorRedirect } from '@/components/ErrorRedirect';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -23,7 +24,8 @@ export default function HomeScreen() {
 
     console.log('getting games for gamer ', gamer?.getName());
     const games = await gamer?.games().catch((error: any) => {
-      console.log('error getting games: ', error);
+      console.log(`error getting games: ${error.message}`);
+
       setErrorMsg(error.message);
     });
 
@@ -54,8 +56,7 @@ export default function HomeScreen() {
 
   // if we couldn't get the game info, make the user sign in again
   if (errorMsg) {
-    console.log('could not load games due to error: ', errorMsg, ', redirecting');
-    return <Redirect href={`/error?message=${errorMsg}`} />;
+    return <ErrorRedirect errorMsg={errorMsg} />;
   }
 
   // console.log('games.active ', games?.active);

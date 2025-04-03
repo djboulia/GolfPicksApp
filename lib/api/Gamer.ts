@@ -74,7 +74,6 @@ export class Gamer {
 
     const json = await ApiFetch.get(url);
 
-    // console.log('games: ', JSON.stringify(json));
     return json;
   }
 }
