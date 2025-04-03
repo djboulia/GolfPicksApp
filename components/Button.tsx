@@ -1,4 +1,4 @@
-import { Theme, useTheme } from '@react-navigation/native';
+import { type Theme, useTheme } from '@react-navigation/native';
 import { StyleSheet, View, Button as ButtonReactNative } from 'react-native';
 
 export default function Button({

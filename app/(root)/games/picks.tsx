@@ -7,7 +7,6 @@ import { Events } from '@/lib/api/Events';
 import Loader from '@/components/Loader';
 import GolferItem from '@/components/GolferItem';
 import PicksHeader from '@/components/PicksHeader';
-import { useSession } from '@/hooks/SessionProvider';
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
 
 const MAX_SELECTIONS = 10;
@@ -18,12 +17,11 @@ export default function PicksScreen() {
   const params = useLocalSearchParams<{ gameId: string; name: string }>();
   const { gameId, name } = params;
 
-  const context = useSession();
   const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
   const [gamer] = useCurrentGamer();
-  const [picks, setPicks] = useState<any[]>();
-  const [game, setGame] = useState<any>();
-  const [event, setEvent] = useState<any>();
+  const [, setPicks] = useState<any[]>();
+  const [, setGame] = useState<any>();
+  const [, setEvent] = useState<any>();
   const [golfers, setGolfers] = useState<any[]>([]);
   const [totalSelected, setTotalSelected] = useState<number>(0);
   const [top10Selected, setTop10Selected] = useState<number>(0);
@@ -53,29 +51,29 @@ export default function PicksScreen() {
     );
   };
 
-  const initSelections = (golfers: any[], picks: any[]) => {
-    let totalSelected = 0;
-    let top10Selected = 0;
-
-    if (golfers && picks) {
-      golfers.forEach((golfer) => {
-        golfer.selected = isSelected(golfer, picks);
-
-        if (golfer.selected) {
-          totalSelected++;
-          if (golfer.rank <= 10) {
-            top10Selected++;
-          }
-        }
-      });
-    }
-
-    setTotalSelected(totalSelected);
-    setTop10Selected(top10Selected);
-    setGolfers(golfers || []);
-  };
-
   useEffect(() => {
+    const initSelections = (golfers: any[], picks: any[]) => {
+      let totalSelected = 0;
+      let top10Selected = 0;
+
+      if (golfers && picks) {
+        golfers.forEach((golfer) => {
+          golfer.selected = isSelected(golfer, picks);
+
+          if (golfer.selected) {
+            totalSelected++;
+            if (golfer.rank <= 10) {
+              top10Selected++;
+            }
+          }
+        });
+      }
+
+      setTotalSelected(totalSelected);
+      setTop10Selected(top10Selected);
+      setGolfers(golfers || []);
+    };
+
     const getPicksAsync = async (id: string | undefined) => {
       setLoadingMessage('Loading...');
 
@@ -90,7 +88,7 @@ export default function PicksScreen() {
         });
         // console.log('result ', result);
 
-        const picks = result?.picks || [];
+        const picks = result?.picks ?? [];
         setPicks(picks);
 
         const game = await Games.gameDay(id).catch((error: any) => {
@@ -116,8 +114,8 @@ export default function PicksScreen() {
     };
 
     // console.log('getting game ', id);
-    getPicksAsync(gameId);
-  }, [gamer]);
+    void getPicksAsync(gameId);
+  }, [gameId, gamer]);
 
   const golferClicked = (index: number) => {
     const golfer = golfers.find((golfer) => golfer.index === index);
@@ -171,7 +169,7 @@ export default function PicksScreen() {
     });
 
     if (gameId && gamer?.getId()) {
-      asyncUpdatePicks(gameId, gamer?.getId(), picks);
+      void asyncUpdatePicks(gameId, gamer?.getId(), picks);
     } else {
       console.log('error: no gamer id found ', gamer?.getId());
     }

@@ -16,7 +16,7 @@ export default function CurrentGameHeader({
 }) {
   // console.log('activeGame', activeGame);
 
-  if (!activeGame || !activeGame.eventid) return null;
+  if (!activeGame?.eventid) return null;
 
   if (activeGame.inProgress) {
     return (

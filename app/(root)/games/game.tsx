@@ -8,7 +8,7 @@ import LeaderboardHeader from '@/components/LeaderboardHeader';
 import { compareScores } from '@/lib/util/comparescores';
 import { useSession } from '@/hooks/SessionProvider';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Theme, useTheme } from '@react-navigation/native';
+import { type Theme, useTheme } from '@react-navigation/native';
 import { getCustomColors } from '@/theme/colors';
 
 export default function GameScreen() {
@@ -45,21 +45,21 @@ export default function GameScreen() {
 
     // console.log('sorted gamers ', gamers);
 
-    setLeaderboard(leaderboard || []);
+    setLeaderboard(leaderboard ?? []);
     setRefreshing(false);
   };
 
   useEffect(() => {
     // console.log('getting game ', id);
     if (id) {
-      getGameAsync(id);
+      void getGameAsync(id);
     }
-  }, []);
+  }, [id]);
 
   const onRefresh = () => {
     console.log('onRefresh id: ', id);
     if (id) {
-      getGameAsync(id);
+      void getGameAsync(id);
     }
   };
 

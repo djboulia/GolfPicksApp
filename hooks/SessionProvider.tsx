@@ -33,7 +33,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     console.log('SessionProvider useEffect', gamer);
     setIsLoading(!gamerLoaded);
     setIsLoggedIn(gamer ? true : false);
-  }, [gamerLoaded]);
+  }, [gamerLoaded, gamer]);
 
   const values = {
     signIn: () => {

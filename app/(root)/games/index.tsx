@@ -5,8 +5,8 @@ import { useCurrentGamer } from '@/hooks/useCurrentGamer';
 import TournamentItem from '@/components/TournamentItem';
 import Loader from '@/components/Loader';
 import CurrentGameHeader from '@/components/CurrentGameHeader';
-import { Redirect, useRouter } from 'expo-router';
-import { Theme, useTheme } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+import { type Theme, useTheme } from '@react-navigation/native';
 import { getCustomColors } from '@/theme/colors';
 import { ErrorRedirect } from '@/components/ErrorRedirect';
 
@@ -30,19 +30,20 @@ export default function HomeScreen() {
     });
 
     // console.log('games ', games);
-    setGames(games || []);
+    setGames(games ?? []);
     setRefreshing(false);
   };
 
   useEffect(() => {
     if (gamer) {
-      getGamesAsync();
+      void getGamesAsync();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gamer]);
 
   const onRefresh = () => {
     console.log('onRefresh HomeScreen');
-    getGamesAsync();
+    void getGamesAsync();
   };
 
   const onClick = (id: string) => {
@@ -83,11 +84,7 @@ export default function HomeScreen() {
             refreshing={refreshing}
             onRefresh={onRefresh}
             renderItem={({ item }) => (
-              <TournamentItem
-                name={item?.event ? item.event : ''}
-                id={item?.eventid}
-                onClick={onClick}
-              />
+              <TournamentItem name={item?.event ?? ''} id={item?.eventid} onClick={onClick} />
             )}
             keyExtractor={(item) => {
               // console.log(item);

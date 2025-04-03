@@ -9,7 +9,7 @@ export default function Link({
   style?: any;
   onPress: () => void;
 }) {
-  const textStyle = style ? style : styles.linkLabel;
+  const textStyle = style ?? styles.linkLabel;
 
   return (
     <View style={styles.linkContainer}>

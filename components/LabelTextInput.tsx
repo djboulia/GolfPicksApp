@@ -1,4 +1,4 @@
-import { Theme, useTheme } from '@react-navigation/native';
+import { type Theme, useTheme } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, View, TextInput, Text } from 'react-native';
 
@@ -37,10 +37,12 @@ export default function LabelTextInput({
           onBlur={() => setFocus(false)}
           onChangeText={onChange}
           value={value}
-          inputMode={type === 'email' ? 'email' : 'text'}
-          autoCapitalize={type === 'email' || type === 'password' ? 'none' : undefined}
+          inputMode={type === InputTypes.email ? 'email' : 'text'}
+          autoCapitalize={
+            type === InputTypes.email || type === InputTypes.password ? 'none' : undefined
+          }
           placeholder={placeholder}
-          secureTextEntry={type === 'password' ? true : false}
+          secureTextEntry={type === InputTypes.password ? true : false}
         />
       </View>
     </View>

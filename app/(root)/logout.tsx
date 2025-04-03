@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useCurrentGamer } from '@/hooks/useCurrentGamer';
 import { useSession } from '@/hooks/SessionProvider';
-import { Theme, useTheme } from '@react-navigation/native';
+import { type Theme, useTheme } from '@react-navigation/native';
 
 export default function LogoutScreen() {
   const theme = useTheme();
@@ -22,9 +22,9 @@ export default function LogoutScreen() {
     }
 
     if (gamer) {
-      logout();
+      void logout();
     }
-  }, [gamer]);
+  }, [gamer, signOut]);
 
   const styles = createStyles(theme);
   return (

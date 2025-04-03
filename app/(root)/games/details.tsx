@@ -5,7 +5,7 @@ import { compareScores } from '@/lib/util/comparescores';
 import { useLocalSearchParams } from 'expo-router';
 import { useLeaderboard } from '@/hooks/useLeaderboard';
 import Loader from '@/components/Loader';
-import { Theme, useTheme } from '@react-navigation/native';
+import { type Theme, useTheme } from '@react-navigation/native';
 import { getCustomColors } from '@/theme/colors';
 
 export default function DetailsScreen() {
@@ -42,7 +42,7 @@ export default function DetailsScreen() {
 
       setGamer(gamer);
     }
-  }, [loaded, leaderboard]);
+  }, [loaded, leaderboard, gamerId, currentRound]);
 
   const header = () => {
     return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Theme, useTheme } from '@react-navigation/native';
+import { type Theme, useTheme } from '@react-navigation/native';
 import { StyleSheet, Text, View, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import LabelTextInput, { InputTypes } from '@/components/LabelTextInput';
 import Button from '@/components/Button';
@@ -10,6 +10,7 @@ import { Gamer } from '../lib/api/Gamer';
 import { useSession } from '@/hooks/SessionProvider';
 import { useRouter } from 'expo-router';
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const GolfPicksLogo = require('../assets/images/golfpicks.png');
 
 export default function Login() {

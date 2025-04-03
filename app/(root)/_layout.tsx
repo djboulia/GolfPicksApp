@@ -15,7 +15,7 @@ export default function RootLayout() {
     if (gamer) {
       signIn();
     }
-  }, [gamer]);
+  }, [gamer, signIn]);
 
   console.log('RootLayout gamerLoaded ', gamerLoaded, 'isLoggedIn ', isLoggedIn);
 

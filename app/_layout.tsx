@@ -12,24 +12,25 @@ import { useColorScheme } from 'react-native';
 import { getTheme } from '@/theme/colors';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+void SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   useEffect(() => {
     if (Platform.OS !== 'web') {
       // allow rotattion to change the layout
-      ScreenOrientation.unlockAsync();
+      void ScreenOrientation.unlockAsync();
     }
   }, []);
 
   const colorScheme = useColorScheme();
   const [fontsLoaded] = useFonts({
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync();
+      void SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
 

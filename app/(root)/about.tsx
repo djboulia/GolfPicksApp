@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useCurrentGamer } from '@/hooks/useCurrentGamer';
-import { Theme, useTheme } from '@react-navigation/native';
+import { type Theme, useTheme } from '@react-navigation/native';
 
 export default function AboutScreen() {
   const theme = useTheme();

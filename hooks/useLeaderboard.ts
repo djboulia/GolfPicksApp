@@ -35,17 +35,17 @@ export function useLeaderboard(gameId: string): {
 
     // console.log('sorted gamers ', gamers);
 
-    setLeaderboard(leaderboard || []);
+    setLeaderboard(leaderboard ?? []);
     setLoaded(true);
   };
 
   useEffect(() => {
-    getGameAsync(gameId);
-  }, []);
+    void getGameAsync(gameId);
+  }, [gameId]);
 
   // trigger a refresh of the leaderboard
   const refresh = () => {
-    getGameAsync(gameId);
+    void getGameAsync(gameId);
   };
 
   return { leaderboard, loaded, refresh, errorMessage };

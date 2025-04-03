@@ -11,7 +11,8 @@ export function useCurrentGamer(): [Gamer | undefined, boolean] {
       setGamer(gamer);
       setLoaded(true);
     };
-    getGamer();
+
+    void getGamer();
   }, []);
 
   return [gamer, loaded];

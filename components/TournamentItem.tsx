@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import LinkContainer from './LinkContainer';
-import { Theme, useTheme } from '@react-navigation/native';
+import { type Theme, useTheme } from '@react-navigation/native';
 import { getCustomColors } from '@/theme/colors';
 
 export default function TournamentItem({

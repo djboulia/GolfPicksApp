@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import LinkContainer from './LinkContainer';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Theme, useTheme } from '@react-navigation/native';
+import { type Theme, useTheme } from '@react-navigation/native';
 import { getCustomColors } from '@/theme/colors';
 
 export default function LeaderboardItem({
@@ -15,8 +15,6 @@ export default function LeaderboardItem({
   const theme = useTheme();
   // console.log('item: ', item);
   // console.log('currentRound: ', item?.rounds, currentRound);
-
-  const scores = [{ score: 0, styles: {} }];
 
   const styles = createStyles(theme);
   return (

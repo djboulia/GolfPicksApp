@@ -1,4 +1,4 @@
-import { Theme, useTheme } from '@react-navigation/native';
+import { type Theme, useTheme } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, ActivityIndicator, View } from 'react-native';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import LinkContainer from './LinkContainer';
-import { Theme, useTheme } from '@react-navigation/native';
+import { type Theme, useTheme } from '@react-navigation/native';
 
 export default function LeaderboardHeader({ roundTitles }: { roundTitles: string[] }) {
   const theme = useTheme();

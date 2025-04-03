@@ -1,5 +1,4 @@
-import { getCustomColors } from '@/theme/colors';
-import { Theme, useTheme } from '@react-navigation/native';
+import { type Theme, useTheme } from '@react-navigation/native';
 import { Link, Stack, useLocalSearchParams } from 'expo-router';
 import { StyleSheet, View, Text, Button } from 'react-native';
 
@@ -24,8 +23,6 @@ export default function ErrorScreen() {
 }
 
 const createStyles = (theme: Theme) => {
-  const customColors = getCustomColors(theme.dark);
-
   return StyleSheet.create({
     container: {
       backgroundColor: theme.colors.background,

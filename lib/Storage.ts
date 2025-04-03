@@ -6,7 +6,7 @@ export class Storage {
       const value = await AsyncStorage.getItem(key);
       console.log('getItem:', value);
       return value;
-    } catch (error) {
+    } catch {
       return undefined;
     }
   }
@@ -16,7 +16,7 @@ export class Storage {
       await AsyncStorage.setItem(key, value);
       console.log('setItem: ', key, value);
       return value;
-    } catch (error) {
+    } catch {
       return undefined;
     }
   }
@@ -26,7 +26,7 @@ export class Storage {
       await AsyncStorage.removeItem(key);
       console.log('removeItem: ', key);
       return;
-    } catch (error) {
+    } catch {
       return undefined;
     }
   }
