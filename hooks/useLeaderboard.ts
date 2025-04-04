@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { GamesApi } from '@/lib/api/GamesApi';
 import { compareScores } from '@/lib/util/comparescores';
 import { type GamerScore } from '@/lib/models/GamerScore';
 import { type Leaderboard } from '@/lib/models/Leaderboard';
+import Api from '@/lib/api/api';
 
 export function useLeaderboard(gameId: string): {
   leaderboard: Leaderboard | undefined;
@@ -18,7 +18,7 @@ export function useLeaderboard(gameId: string): {
     console.log('getting game ', id);
     setLoaded(false);
 
-    const leaderboard = await GamesApi.leaderboard(id).catch((error) => {
+    const leaderboard = await Api.games.leaderboard(id).catch((error) => {
       console.log('error getting game: ', error);
       setErrorMessage(error.message);
       return undefined;

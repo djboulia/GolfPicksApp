@@ -8,7 +8,7 @@ export default function TestScreen() {
     <SafeAreaView>
       <Text>This is the test screen</Text>
 
-      <Link href="/games/picks">Picks</Link>
+      <Link href="/games/picks?gameId=1&name=Game">Picks</Link>
     </SafeAreaView>
   );
 }

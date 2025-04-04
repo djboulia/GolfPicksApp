@@ -2,16 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, FlatList } from 'react-native';
 import ErrorText from '@/components/ErrorText';
 import { useCurrentGamer } from '@/hooks/useCurrentGamer';
-import { GamesApi } from '@/lib/api/GamesApi';
-import { EventApi } from '@/lib/api/EventApi';
-import Loader from '@/components/Loader';
-import GolferItem from '@/components/GolferItem';
-import PicksHeader from '@/components/PicksHeader';
-import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
 import { type Golfer } from '@/lib/models/Golfer';
 import { type GamerPick } from '@/lib/models/GamerPick';
 import { type Game } from '@/lib/models/Game';
 import { type Event } from '@/lib/models/Event';
+import Loader from '@/components/Loader';
+import GolferItem from '@/components/GolferItem';
+import PicksHeader from '@/components/PicksHeader';
+import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
+import Api from '@/lib/api/api';
 
 const MAX_SELECTIONS = 10;
 const MAX_TOP10_SELECTIONS = 2;
@@ -80,9 +79,10 @@ export default function PicksScreen() {
 
     const getPicksAsync = async (id: string | undefined) => {
       setLoadingMessage('Loading...');
+      console.log('getting picks ', id, ' gamer ', gamer?.id);
 
       if (id && gamer?.id) {
-        const picks = await GamesApi.picks(id, gamer?.id).catch((error) => {
+        const picks = await Api.games.picks(id, gamer?.id).catch((error) => {
           if (error?.message?.includes('not found')) {
             // haven't made picks yet
             return undefined;
@@ -94,7 +94,7 @@ export default function PicksScreen() {
 
         setPicks(picks);
 
-        const game = await GamesApi.gameDay(id).catch((error) => {
+        const game = await Api.games.gameDay(id).catch((error) => {
           console.log('error getting game: ', error);
           setErrorMsg(error.message);
           return undefined;
@@ -104,7 +104,7 @@ export default function PicksScreen() {
 
         if (game?.event) {
           const eventid = game.event;
-          const event = await EventApi.get(eventid).catch((error) => {
+          const event = await Api.event.get(eventid).catch((error) => {
             console.log('error getting event: ', error);
             setErrorMsg(error.message);
             return undefined;
@@ -149,7 +149,7 @@ export default function PicksScreen() {
   const asyncUpdatePicks = async (gameid: string, gamerid: string, picks: GamerPick[]) => {
     setLoadingMessage('Saving picks...');
 
-    const result = await GamesApi.updatePicks(gameid, gamerid, picks).catch((error) => {
+    const result = await Api.games.updatePicks(gameid, gamerid, picks).catch((error) => {
       console.log('error updating picks: ', error);
       setLoadingMessage(undefined);
       setErrorMsg(error.message);

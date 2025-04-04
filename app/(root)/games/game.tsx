@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import ErrorText from '@/components/ErrorText';
 import LeaderboardItem from '@/components/LeaderboardItem';
-import { GamesApi } from '@/lib/api/GamesApi';
 import Loader from '@/components/Loader';
 import LeaderboardHeader from '@/components/LeaderboardHeader';
 import { compareScores } from '@/lib/util/comparescores';
@@ -12,6 +11,7 @@ import { type Theme, useTheme } from '@react-navigation/native';
 import { getCustomColors } from '@/theme/colors';
 import { type GamerScore } from '@/lib/models/GamerScore';
 import { type Leaderboard } from '@/lib/models/Leaderboard';
+import Api from '@/lib/api/api';
 
 export default function GameScreen() {
   const router = useRouter();
@@ -28,7 +28,7 @@ export default function GameScreen() {
 
     setRefreshing(true);
 
-    const leaderboard = await GamesApi.leaderboard(id).catch((error) => {
+    const leaderboard = await Api.games.leaderboard(id).catch((error) => {
       console.log('error getting game: ', error);
       setErrorMessage(error.message);
       return undefined;

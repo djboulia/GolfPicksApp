@@ -3,13 +3,14 @@ import { type GamerPick } from '../models/GamerPick';
 import { type Leaderboard } from '../models/Leaderboard';
 import { ApiFetch } from '../util/apifetch';
 import { getBaseUrl } from '../util/url';
+import { type GamesApiType } from './types';
 
 const getUrl = () => {
   return getBaseUrl() + `/Games`;
 };
 
-export class GamesApi {
-  static async leaderboard(id: string): Promise<Leaderboard | undefined> {
+export const GamesApi: GamesApiType = {
+  async leaderboard(id: string): Promise<Leaderboard | undefined> {
     const baseUrl = getUrl();
     const url = baseUrl + `/${id}/leaderboard`;
 
@@ -17,9 +18,9 @@ export class GamesApi {
 
     // console.log('games: ', JSON.stringify(json));
     return json;
-  }
+  },
 
-  static async gameDay(gameid: string): Promise<Game | undefined> {
+  async gameDay(gameid: string): Promise<Game | undefined> {
     const baseUrl = getUrl();
     const url = baseUrl + `/${gameid}/gameDay`;
 
@@ -29,9 +30,9 @@ export class GamesApi {
 
     // console.log('games: ', JSON.stringify(json));
     return json;
-  }
+  },
 
-  static async picks(id: string, gamerId: string): Promise<GamerPick[]> {
+  async picks(id: string, gamerId: string): Promise<GamerPick[]> {
     const baseUrl = getUrl();
     const url = baseUrl + `/${id}/Gamers/${gamerId}/picks`;
 
@@ -41,9 +42,9 @@ export class GamesApi {
 
     // console.log('games: ', JSON.stringify(json));
     return json?.picks;
-  }
+  },
 
-  static async updatePicks(id: string, gamerId: string, picks: GamerPick[]): Promise<GamerPick[]> {
+  async updatePicks(id: string, gamerId: string, picks: GamerPick[]): Promise<GamerPick[]> {
     const baseUrl = getUrl();
     const url = baseUrl + `/${id}/Gamers/${gamerId}/picks`;
 
@@ -53,5 +54,5 @@ export class GamesApi {
 
     // console.log('games: ', JSON.stringify(json));
     return json;
-  }
-}
+  },
+};

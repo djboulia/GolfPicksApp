@@ -8,7 +8,7 @@ import ErrorText from '@/components/ErrorText';
 
 import { useSession } from '@/hooks/SessionProvider';
 import { useRouter } from 'expo-router';
-import { GamerApi } from '@/lib/api/GamerApi';
+import Api from '@/lib/api/api';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const GolfPicksLogo = require('../assets/images/golfpicks.png');
@@ -30,7 +30,7 @@ export default function Login() {
     }
     console.log(`calling Login with ${email} and ${password}`);
     setInProgress(true);
-    const gamer = await GamerApi.login(email, password).catch((error) => {
+    const gamer = await Api.gamer.login(email, password).catch((error) => {
       setInProgress(false);
 
       console.log('login error: ', error);

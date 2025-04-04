@@ -3,8 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useCurrentGamer } from '@/hooks/useCurrentGamer';
 import { useSession } from '@/hooks/SessionProvider';
 import { type Theme, useTheme } from '@react-navigation/native';
-import { GamerApi } from '@/lib/api/GamerApi';
 import { Redirect } from 'expo-router';
+import Api from '@/lib/api/api';
 
 export default function LogoutScreen() {
   const theme = useTheme();
@@ -17,7 +17,7 @@ export default function LogoutScreen() {
     async function logout() {
       console.log('logging out gamer ', gamer?.name);
       try {
-        await GamerApi.logout();
+        await Api.gamer.logout();
         signOut();
       } catch (error) {
         console.log('logout error: ', error);

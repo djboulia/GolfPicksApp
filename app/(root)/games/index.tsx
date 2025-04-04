@@ -9,9 +9,9 @@ import { useRouter } from 'expo-router';
 import { type Theme, useTheme } from '@react-navigation/native';
 import { getCustomColors } from '@/theme/colors';
 import { ErrorRedirect } from '@/components/ErrorRedirect';
-import { GamerApi } from '@/lib/api/GamerApi';
 import { type Gamer } from '@/lib/models/Gamer';
 import { type Games } from '@/lib/models/Games';
+import Api from '@/lib/api/api';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -27,7 +27,7 @@ export default function HomeScreen() {
 
     if (gamer) {
       console.log('getting games for gamer ', gamer.name);
-      const games = await GamerApi.games(gamer).catch((error) => {
+      const games = await Api.gamer.games(gamer).catch((error) => {
         console.log(`error getting games: ${error.message}`);
 
         setErrorMsg(error.message);
