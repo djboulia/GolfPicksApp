@@ -190,39 +190,42 @@ export default function PicksScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.containerInput}>
-        <PicksHeader
-          gamerName={gamer?.name ?? ''}
-          gameName={name ?? ''}
-          top10Selected={top10Selected}
-          top10Max={MAX_TOP10_SELECTIONS}
-          totalSelected={totalSelected}
-          totalMax={MAX_SELECTIONS}
-          submitEnabled={isSubmitEnabled()}
-          onClick={updatePicks}
-        />
-
-        {loadingMessage && <Loader />}
-
-        {golfers ? (
-          <FlatList
-            data={golfers}
-            renderItem={({ item }) => (
-              <GolferItem
-                name={item.name}
-                rank={item.rank}
-                index={item.index}
-                selected={item.selected}
-                enabled={isEnabled(item)}
-                onClick={golferClicked}
-              />
-            )}
-            keyExtractor={(item) => {
-              return item.index.toString();
-            }}
+        <View style={{ flex: 1 }}>
+          <PicksHeader
+            gamerName={gamer?.name ?? ''}
+            gameName={name ?? ''}
+            top10Selected={top10Selected}
+            top10Max={MAX_TOP10_SELECTIONS}
+            totalSelected={totalSelected}
+            totalMax={MAX_SELECTIONS}
+            submitEnabled={isSubmitEnabled()}
+            onClick={updatePicks}
           />
-        ) : (
-          !errorMsg && <Loader />
-        )}
+          {loadingMessage && <Loader />}
+        </View>
+
+        <View style={{ flex: 3 }}>
+          {golfers ? (
+            <FlatList
+              data={golfers}
+              renderItem={({ item }) => (
+                <GolferItem
+                  name={item.name}
+                  rank={item.rank}
+                  index={item.index}
+                  selected={item.selected}
+                  enabled={isEnabled(item)}
+                  onClick={golferClicked}
+                />
+              )}
+              keyExtractor={(item) => {
+                return item.index.toString();
+              }}
+            />
+          ) : (
+            !errorMsg && <Loader />
+          )}
+        </View>
       </View>
       {errorMsg && (
         <View style={styles.containerInput}>
@@ -236,9 +239,12 @@ export default function PicksScreen() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
+    flex: 1,
   },
   containerInput: {
     backgroundColor: '#fff',
     paddingVertical: 10,
+    flex: 1,
+    flexDirection: 'column',
   },
 });
