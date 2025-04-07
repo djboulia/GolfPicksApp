@@ -3,7 +3,7 @@ import { type Games } from '@/lib/models/Games';
 export const gamesData: Games = {
   active: {
     inProgress: true,
-    event: 'Tournament Name',
+    event: 'In-progress Tournament Name',
     eventid: '1234',
     joined: false,
   },
