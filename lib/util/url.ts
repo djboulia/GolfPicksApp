@@ -4,6 +4,9 @@
 
 export function getBaseUrl() {
   const host = process.env.EXPO_PUBLIC_API_URL;
+  if (!host) {
+    throw new Error('EXPO_PUBLIC_API_URL is not defined');
+  }
 
   return `${host}/api`;
 }

@@ -65,7 +65,7 @@ export default function HomeScreen() {
 
   const updatePicks = (gameid: string, name: string) => {
     console.log('updatePicks ', gameid, name);
-    router.push(`/games/picks?gameId=${gameid}'&name=${name}`);
+    router.push(`/games/picks?gameId=${gameid}&name=${name}`);
   };
 
   // if we couldn't get the game info, make the user sign in again

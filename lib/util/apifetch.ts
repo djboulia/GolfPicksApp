@@ -12,7 +12,12 @@ export class ApiFetch {
       throw error;
     });
 
-    const json = await response.json();
+    const json = await response.json().catch(() => {
+      console.log('error parsing json for URL: ', url);
+      console.log('response: ', response);
+      return { message: 'Error parsing json' };
+    });
+
     if (response.status !== 200) {
       console.log('error for URL: ', url);
       throw new Error(json.message);

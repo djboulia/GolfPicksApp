@@ -34,7 +34,7 @@ export default function Login() {
       setInProgress(false);
 
       console.log('login error: ', error);
-      setErrorMsg('Error logging in.');
+      setErrorMsg(`Error logging in: ${error?.message}`);
     });
     setInProgress(false);
 
