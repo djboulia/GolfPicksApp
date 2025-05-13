@@ -10,6 +10,8 @@ import { getCustomColors } from '@/theme/colors';
 import { type GamerScore } from '@/lib/models/GamerScore';
 import { type GamerPick } from '@/lib/models/GamerPick';
 
+const TOP_SCORES = 5; // cut line for scores that count towards total
+
 export default function DetailsScreen() {
   const params = useLocalSearchParams<{ gameId: string; gamerId: string; currentRound: string }>();
   const theme = useTheme();
@@ -69,21 +71,19 @@ export default function DetailsScreen() {
     );
   };
 
-  const footer = () => {
+  const topFiveScore = () => {
+    // only show the latest score
+
+    const scores = gamer?.scores?.map((score: string, index: number) => {
+      if (gamer?.scores?.[index + 1]) {
+        return '';
+      } else {
+        return score;
+      }
+    });
+
     return (
       <>
-        <View key={'total'} style={styles.totalsContainer}>
-          <Text key={'total'} style={styles.totals}>
-            Total
-          </Text>
-          {rounds.map((round: number, index: number) => {
-            return (
-              <Text key={round} style={styles.totalsScore}>
-                {gamer?.totals[index]}
-              </Text>
-            );
-          })}
-        </View>
         <View key={'top5'} style={styles.top5Container}>
           <Text key={'top5'} style={styles.top5}>
             Top Five
@@ -91,7 +91,7 @@ export default function DetailsScreen() {
           {rounds.map((round: number, index: number) => {
             return (
               <Text key={round} style={styles.top5Score}>
-                {gamer?.scores[index]}
+                {scores?.[index]}
               </Text>
             );
           })}
@@ -107,21 +107,40 @@ export default function DetailsScreen() {
           <FlatList
             data={gamer.picks}
             ListHeaderComponent={header}
-            ListFooterComponent={footer}
-            renderItem={({ item }) => (
-              <View style={styles.playerContainer}>
-                <Text key={'name'} style={styles.player} numberOfLines={1}>
-                  {item.name}
-                </Text>
-                {rounds.map((round: number, index: number) => {
-                  return (
-                    <Text key={round} style={styles.playerScore}>
-                      {item.rounds[index]}
+            renderItem={({ item, index }) => {
+              const listIndex = index;
+              return (
+                <>
+                  {
+                    /* include the scores after the top five players */
+                    listIndex === TOP_SCORES && topFiveScore()
+                  }
+                  <View
+                    style={listIndex < TOP_SCORES ? styles.playerContainer : styles.totalsContainer}
+                  >
+                    <Text
+                      key={'name'}
+                      style={listIndex < TOP_SCORES ? styles.player : styles.playerCut}
+                      numberOfLines={1}
+                    >
+                      {item.name}
                     </Text>
-                  );
-                })}
-              </View>
-            )}
+                    {rounds.map((round: number, scoreIndex: number) => {
+                      return (
+                        <Text
+                          key={round}
+                          style={
+                            listIndex < TOP_SCORES ? styles.playerScore : styles.playerCutScore
+                          }
+                        >
+                          {item.rounds[scoreIndex]}
+                        </Text>
+                      );
+                    })}
+                  </View>
+                </>
+              );
+            }}
             keyExtractor={(item) => {
               // console.log(item);
               return item.name;
@@ -209,6 +228,20 @@ const createStyles = (theme: Theme) => {
       borderWidth: 0,
       flex: 1,
     },
+    playerCut: {
+      ...baseLabelStyle,
+      textAlign: 'left',
+      color: defaultDarkTextColor,
+      borderWidth: 0,
+      flex: 3,
+    },
+    playerCutScore: {
+      ...baseScoreStyle,
+      textAlign: 'center',
+      color: defaultDarkTextColor,
+      borderWidth: 0,
+      flex: 1,
+    },
     header: {
       ...baseLabelStyle,
       textAlign: 'center',
@@ -225,40 +258,34 @@ const createStyles = (theme: Theme) => {
       borderWidth: 0,
       flex: 1,
     },
-    totals: {
-      ...baseLabelStyle,
-      textAlign: 'center',
-      color: defaultDarkTextColor,
-      borderColor: customColors.border,
-      flex: 3,
-    },
-    totalsScore: {
-      ...baseScoreStyle,
-      textAlign: 'center',
-      color: defaultDarkTextColor,
-      borderColor: customColors.border,
-      flex: 1,
-    },
     top5Container: {
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'row',
-      backgroundColor: customColors.top5Header,
+      backgroundColor: customColors.subHeader,
     },
     top5: {
       ...baseLabelStyle,
-      color: customColors.leaderboardText,
-      borderColor: customColors.border,
       textAlign: 'center',
+      color: theme.dark ? theme.colors.text : theme.colors.primary,
       fontWeight: 'bold',
+      backgroundColor: theme.colors.background,
+      borderColor: theme.colors.text,
+      borderWidth: 0,
+      borderTopWidth: 1,
+      borderBottomWidth: 1,
       flex: 3,
     },
     top5Score: {
       ...baseScoreStyle,
-      color: customColors.leaderboardText,
-      borderColor: customColors.border,
       textAlign: 'center',
+      color: theme.dark ? theme.colors.text : theme.colors.primary,
       fontWeight: 'bold',
+      backgroundColor: theme.colors.background,
+      borderColor: theme.colors.text,
+      borderWidth: 0,
+      borderTopWidth: 1,
+      borderBottomWidth: 1,
       flex: 1,
     },
 
